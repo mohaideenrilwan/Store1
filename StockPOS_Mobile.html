@@ -26,9 +26,9 @@ html{height:100%;overscroll-behavior:none}
 body{font-family:var(--ff);font-size:14px;color:var(--text);background:var(--bg);height:100%;overflow:hidden}
 
 /* ══ LAYOUT ══════════════════════════════════════════ */
-.app{display:flex;height:100vh;overflow:hidden}
+.app{display:flex;flex:1;min-height:0;overflow:hidden}
 .sidebar{width:210px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;z-index:20}
-.main{flex:1;overflow-y:auto;overflow-x:hidden;background:var(--bg);scroll-behavior:smooth}
+.main{flex:1;min-width:0;overflow-y:auto;overflow-x:hidden;background:var(--bg);scroll-behavior:smooth}
 .app-shell{display:flex;flex-direction:column;height:100vh;overflow:hidden}
 
 /* ══ SIDEBAR ════════════════════════════════════════ */
@@ -60,8 +60,8 @@ body{font-family:var(--ff);font-size:14px;color:var(--text);background:var(--bg)
 .topbar-right{display:flex;align-items:center;gap:8px}
 
 /* ══ MOBILE BOTTOM NAV ══════════════════════════════ */
-.bnav{display:none;position:fixed;bottom:0;left:0;right:0;height:var(--bnav);background:var(--bg2);border-top:1px solid var(--border);z-index:30;safe-area-inset-bottom:env(safe-area-inset-bottom)}
-.bnav-inner{display:flex;height:100%}
+.bnav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:30;padding-bottom:env(safe-area-inset-bottom,0px)}
+.bnav-inner{display:flex;height:var(--bnav)}
 .bni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;font-size:10px;color:var(--text3);border-top:2px solid transparent;transition:all .1s;position:relative;-webkit-tap-highlight-color:transparent}
 .bni.on{color:var(--accent);border-top-color:var(--accent)}
 .bni .bic{font-size:19px;line-height:1}
@@ -135,10 +135,8 @@ tr:hover td{background:var(--bg2)}
 /* ══ ENTRY NO ═══════════════════════════════════════ */
 .eno{font-family:var(--fm);font-size:22px;font-weight:700;letter-spacing:-.5px}
 
-/* ══ INPUT MOBILE SIZING ════════════════════════════ */
-@media(max-width:768px){
-  input:not([type="hidden"]),select,textarea{font-size:16px!important} /* prevents iOS auto-zoom */
-}
+/* ══ SEARCH BAR ════════════════════════════════════ */
+.search-bar{width:200px;font-size:12px;padding:6px 10px}
 
 /* ══ INFO BAR ═══════════════════════════════════════ */
 .info-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--r8);border:1px solid var(--blue-bd);background:var(--blue-bg);margin-bottom:16px;flex-wrap:wrap;font-size:12px;color:var(--blue)}
@@ -222,53 +220,180 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
 
 /* ════════════════ RESPONSIVE ════════════════════════ */
 @media(max-width:768px){
-  body{overflow:hidden;height:100vh}
-  .app-shell{height:100vh;display:flex;flex-direction:column;overflow:hidden}
-  .app{flex:1;overflow:hidden;height:auto}
+  /* ── Core layout ── */
+  html,body{height:100%;height:100dvh;overflow:hidden}
+  .app-shell{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+  .app{flex:1;min-height:0;display:flex;overflow:hidden}
   .sidebar{display:none}
-  .main{overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--bnav) + 16px)}
+  .main{
+    flex:1;min-width:0;
+    overflow-y:auto;overflow-x:hidden;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior-y:contain;
+    scroll-padding-top:16px;
+    padding-bottom:calc(var(--bnav) + env(safe-area-inset-bottom,0px) + 20px);
+    scroll-padding-bottom:calc(var(--bnav) + 24px);
+  }
+
+  /* ── Topbar / Bottom nav ── */
   .topbar{display:flex}
   .bnav{display:block}
-  .page{padding:12px;padding-bottom:20px}
-  .tcol{grid-template-columns:1fr}
-  .metrics{grid-template-columns:1fr 1fr}
-  .ph{flex-direction:column;gap:8px}
-  .ph-right{width:100%;justify-content:space-between}
-  .card{padding:14px;margin-bottom:12px}
+  .bni .bic{font-size:20px;line-height:1.1}
+
+  /* ── Inputs — prevent iOS zoom + proper touch targets ── */
+  input:not([type="hidden"]),select,textarea{
+    font-size:16px!important;
+    min-height:48px;
+    padding:12px 14px!important;
+    border-radius:var(--r8)!important;
+  }
+  select{padding-right:36px!important}
+  button{min-height:44px}
+  button.sm{min-height:38px;font-size:12px;padding:6px 12px}
+
+  /* ── Pages ── */
+  .page{padding:14px;padding-bottom:24px}
+
+  /* ── Page header ── */
+  .ph{flex-direction:column;gap:8px;margin-bottom:14px}
+  .ph-title{font-size:20px}
+  .ph-right{width:100%;justify-content:space-between;gap:8px}
+
+  /* ── Grid layouts ── */
+  .tcol{grid-template-columns:1fr;gap:12px}
+  .g2{grid-template-columns:1fr 1fr;gap:10px}
+  .metrics{grid-template-columns:1fr 1fr;gap:8px}
+
+  /* ── Cards ── */
+  .card{padding:14px;margin-bottom:10px}
+
+  /* ── Metrics ── */
+  .metric{padding:12px 14px}
+  .metric .mv{font-size:22px}
+
+  /* ── Entry number ── */
   .eno{font-size:18px}
-  #inSearch,#outSearch{width:100%!important;min-width:0}
-  .g2{grid-template-columns:1fr 1fr}
-  table{min-width:500px}
+
+  /* ── Form groups ── */
+  .fg{gap:6px;margin-bottom:12px}
+  .fg label{font-size:12px;letter-spacing:.3px}
+
+  /* ── Brow — stack full-width on all mobile ── */
+  .brow{flex-direction:column;gap:10px;margin-top:16px}
+  .brow button{
+    width:100%;justify-content:center;
+    min-height:52px;font-size:15px;font-weight:600;
+    border-radius:var(--r8);padding:14px 16px;letter-spacing:-.1px;
+  }
+  #btnIN,#btnSaveProd{order:-1;box-shadow:0 2px 8px rgba(17,17,16,.18)}
+  #btnOUT{
+    order:-1;
+    background:var(--red)!important;color:#fff!important;border-color:var(--red)!important;
+    box-shadow:0 2px 8px rgba(155,21,21,.28);
+  }
+
+  /* ── Search inputs — full width, proper touch height ── */
+  #inSearch,#outSearch{width:100%!important;min-width:0;max-width:100%!important;font-size:16px!important;padding:10px 14px!important;min-height:44px}
+
+  /* ── Table card top bar — stack on mobile ── */
+  .tw-header{flex-direction:column!important;align-items:stretch!important;gap:8px!important}
+  .tw-header .form-title{margin-bottom:0}
+
+  /* ── Tables ── */
+  table{min-width:520px;font-size:12px}
+  th{font-size:10px;padding:8px 10px}
+  td{padding:8px 10px}
+  .tw{border-radius:var(--r6);overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+  /* ── Total value input ── */
+  input.hi{font-size:16px!important;font-weight:700}
+
+  /* ── Product picker ── */
+  .prod-pick-wrap{grid-template-columns:1fr auto;gap:8px}
+  .prod-pick-disp{font-size:15px;padding:12px 14px;min-height:48px}
+  .prod-pick-btn{min-width:90px;font-size:14px;padding:12px 16px}
+
+  /* ── Conn banner ── */
+  .conn-banner{padding:10px 12px;font-size:12px}
+
+  /* ── Sync note ── */
+  .sn{font-size:12px;padding:10px 12px;border-radius:var(--r6);margin-top:10px}
+
+  /* ── Setup ── */
   .setup-card{max-width:100%}
-  pre{font-size:10px;max-height:200px}
-
-  /* Product picker — stack vertically on tablet */
-  .prod-pick-wrap{grid-template-columns:1fr auto}
-  .prod-pick-btn{min-width:88px}
+  pre{font-size:10px;max-height:220px}
 }
 
+/* ════════════════ SMALL PHONES ≤ 480px ═════════════ */
 @media(max-width:480px){
-  .metrics{grid-template-columns:1fr 1fr}
-  .g2{grid-template-columns:1fr}
-  .brow{flex-direction:column}
-  .brow button{justify-content:center;width:100%}
-  .info-bar{flex-direction:column;align-items:stretch}
-  #inSearch,#outSearch{width:100%!important}
+  /* ── Pages ── */
+  .page{padding:12px 12px 16px}
 
-  /* Product picker — full width stacked on mobile */
-  .prod-pick-wrap{grid-template-columns:1fr;gap:6px}
-  .prod-pick-disp{max-width:100%;font-size:14px;padding:12px 14px}
-  .prod-pick-btn{width:100%;justify-content:center;font-size:14px;padding:12px 16px;border-radius:var(--r8)}
+  /* ── Single-column grids ── */
+  .g2{grid-template-columns:1fr;gap:10px}
 
-  .ppBox{max-height:92vh;border-radius:var(--r12) var(--r12) 0 0}
+  /* ── Metric values ── */
+  .metric .mv{font-size:20px}
+  .metric .ml{font-size:10px}
+  .metric{padding:10px 12px}
+
+  /* ── Page header ── */
+  .ph-right{flex-direction:column;gap:8px;align-items:stretch}
+  .ph-right button,
+  .ph-right .live-pill,
+  .ph-right .offline-pill{width:100%;justify-content:center;text-align:center}
+
+  /* ── Cards ── */
+  .card{padding:12px;margin-bottom:10px;border-radius:var(--r8)}
+
+  /* ── Brow — stacked full-width ── */
+  .brow{flex-direction:column;gap:10px;margin-top:16px}
+  .brow button{
+    width:100%;justify-content:center;
+    min-height:52px;font-size:15px;font-weight:600;
+    border-radius:var(--r8);padding:14px 16px;letter-spacing:-.1px;
+  }
+  /* Primary actions float to top */
+  #btnIN,#btnSaveProd{order:-1;box-shadow:0 2px 8px rgba(17,17,16,.18)}
+  #btnOUT{
+    order:-1;
+    background:var(--red)!important;color:#fff!important;border-color:var(--red)!important;
+    box-shadow:0 2px 8px rgba(155,21,21,.28);
+  }
+
+  /* ── Total value ── */
+  input.hi{font-size:20px!important;padding:16px 14px!important;text-align:center;font-weight:700;letter-spacing:-.3px}
+
+  /* ── Product picker — full stacked ── */
+  .prod-pick-wrap{grid-template-columns:1fr;gap:8px}
+  .prod-pick-disp{font-size:16px;padding:14px;min-height:52px;line-height:1.3;border-radius:var(--r8)!important}
+  .prod-pick-btn{width:100%;justify-content:center;font-size:15px;padding:14px 16px;border-radius:var(--r8);min-height:52px}
+
+  /* ── Product picker modal — bottom sheet ── */
   .ppModal{align-items:flex-end;padding:0}
-  .ph-right{flex-direction:column;gap:6px;align-items:stretch}
-  .ph-right button,.ph-right .live-pill,.ph-right .offline-pill{width:100%;justify-content:center;text-align:center}
-  .conn-banner{font-size:11px}
+  .ppBox{max-height:88vh;border-radius:var(--r12) var(--r12) 0 0;padding-bottom:env(safe-area-inset-bottom,0px)}
+  .ppSearch input{font-size:16px!important;min-height:44px;padding:10px 14px}
+  .ppItem{padding:14px 16px;min-height:52px}
+  .ppName{font-size:14px}
+
+  /* ── Info bar ── */
+  .info-bar{flex-direction:column;align-items:stretch;gap:8px}
+
+  /* ── Search bars full width ── */
+  #inSearch,#outSearch,.search-bar{width:100%!important;min-width:0}
+
+  /* ── Entry no ── */
+  .eno{font-size:17px}
+
+  /* ── Connection pills ── */
+  .conn-banner{font-size:11px;padding:8px 12px}
   .offline-pill,.live-pill{font-size:11px}
+
+  /* ── Setup page buttons ── */
+  #page-setup .brow{flex-direction:column;gap:10px}
+  #page-setup .brow button{width:100%;justify-content:center;min-height:52px;font-size:15px;border-radius:var(--r8)}
 }
-</style>
-</head>
+
 <body>
 
 <!-- OVERLAY LOADER -->
@@ -409,9 +534,8 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
       </div>
     </div>
     <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
-        <div class="form-title" style="margin-bottom:0">Recent IN entries <span style="font-size:10px;color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0">(live from Sheets)</span></div>
-        <input id="inSearch" style="width:200px;font-size:12px;padding:6px 10px" placeholder="🔍 Search product…" oninput="filterIN(this.value)" autocomplete="off">
+      <div class="tw-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+        <input id="inSearch" class="search-bar" placeholder="🔍 Search product…" oninput="filterIN(this.value)" autocomplete="off">
       </div>
       <div id="inEditBar" style="display:none;padding:10px 12px;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:var(--r8);margin-bottom:10px;font-size:12px;color:var(--amber);display:none;align-items:center;gap:10px">
         <span>✎ Editing entry — make changes above then click <strong>Update</strong></span>
@@ -475,9 +599,8 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
       </div>
     </div>
     <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
-        <div class="form-title" style="margin-bottom:0">Recent OUT entries <span style="font-size:10px;color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0">(live from Sheets)</span></div>
-        <input id="outSearch" style="width:200px;font-size:12px;padding:6px 10px" placeholder="🔍 Search product…" oninput="filterOUT(this.value)" autocomplete="off">
+      <div class="tw-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+        <input id="outSearch" class="search-bar" placeholder="🔍 Search product…" oninput="filterOUT(this.value)" autocomplete="off">
       </div>
       <div id="outEditBar" style="display:none;padding:10px 12px;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:var(--r8);margin-bottom:10px;font-size:12px;color:var(--amber);align-items:center;gap:10px">
         <span>✎ Editing entry — make changes above then click <strong>Update</strong></span>
@@ -1455,6 +1578,19 @@ function copyScript(){
 //  START
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closePicker(); });
+
+// ── Mobile: scroll focused input above keyboard ──────────
+if (window.innerWidth <= 768) {
+  document.addEventListener('focusin', e => {
+    const el = e.target;
+    if (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA') {
+      setTimeout(() => {
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 200); // slightly faster — keyboard opens ~200ms on most devices
+    }
+  });
+}
+
 init();
 </script>
 </body>
