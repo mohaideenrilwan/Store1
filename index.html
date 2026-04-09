@@ -284,12 +284,28 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
     width:100%;justify-content:center;
     min-height:52px;font-size:15px;font-weight:600;
     border-radius:var(--r8);padding:14px 16px;letter-spacing:-.1px;
+    white-space:normal;text-align:center;
   }
   #btnIN,#btnSaveProd{order:-1;box-shadow:0 2px 8px rgba(17,17,16,.18)}
   #btnOUT{
     order:-1;
     background:var(--red)!important;color:#fff!important;border-color:var(--red)!important;
     box-shadow:0 2px 8px rgba(155,21,21,.28);
+  }
+
+  /* ── IN/OUT tcol: form card full-width, table card below ── */
+  #page-stockin .tcol,
+  #page-stockout .tcol{
+    display:flex;flex-direction:column;gap:12px;
+  }
+  #page-stockin .tcol > div,
+  #page-stockout .tcol > div{
+    width:100%;min-width:0;
+  }
+  /* Table card: limit height on mobile so it doesn't push form off screen */
+  #page-stockin .tcol > div:last-child .tw,
+  #page-stockout .tcol > div:last-child .tw{
+    max-height:260px;overflow-y:auto;-webkit-overflow-scrolling:touch;
   }
 
   /* ── Search inputs — full width, proper touch height ── */
@@ -352,6 +368,7 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
     width:100%;justify-content:center;
     min-height:52px;font-size:15px;font-weight:600;
     border-radius:var(--r8);padding:14px 16px;letter-spacing:-.1px;
+    white-space:normal;text-align:center;
   }
   /* Primary actions float to top */
   #btnIN,#btnSaveProd{order:-1;box-shadow:0 2px 8px rgba(17,17,16,.18)}
@@ -359,6 +376,12 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
     order:-1;
     background:var(--red)!important;color:#fff!important;border-color:var(--red)!important;
     box-shadow:0 2px 8px rgba(155,21,21,.28);
+  }
+
+  /* ── IN/OUT table card — contained on small screens ── */
+  #page-stockin .tcol > div:last-child .tw,
+  #page-stockout .tcol > div:last-child .tw{
+    max-height:240px;overflow-y:auto;-webkit-overflow-scrolling:touch;
   }
 
   /* ── Total value ── */
@@ -393,7 +416,8 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
   #page-setup .brow{flex-direction:column;gap:10px}
   #page-setup .brow button{width:100%;justify-content:center;min-height:52px;font-size:15px;border-radius:var(--r8)}
 }
-
+</style>
+</head>
 <body>
 
 <!-- OVERLAY LOADER -->
