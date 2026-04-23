@@ -4,6 +4,337 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>StockPOS Live</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23111110'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='18' font-family='system-ui,sans-serif' font-weight='700' fill='white'>S</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23111110'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='18' font-family='system-ui,sans-serif' font-weight='700' fill='white'>S</text></svg>">
+<style>
+:root{
+  --bg:#ffffff;--bg2:#f8f8f7;--bg3:#f0efed;
+  --text:#111110;--text2:#5c5c57;--text3:#9a9a94;
+  --border:#e3e2df;--border2:#cccbc6;
+  --accent:#111110;--accent-fg:#ffffff;
+  --green:#146c3a;--green-bg:#edf7f1;--green-bd:#a8dbbf;
+  --amber:#7a4800;--amber-bg:#fffaeb;--amber-bd:#f0d080;
+  --red:#9b1515;--red-bg:#fff1f1;--red-bd:#f8a8a8;
+  --blue:#1e3a8a;--blue-bg:#eef4ff;--blue-bd:#93bffd;
+  --purple:#5b21b6;--purple-bg:#f3f0ff;
+  --r4:4px;--r6:6px;--r8:8px;--r12:12px;
+  --shadow:0 1px 3px rgba(0,0,0,.07),0 4px 12px rgba(0,0,0,.04);
+  --shadow2:0 2px 8px rgba(0,0,0,.1),0 8px 24px rgba(0,0,0,.06);
+  --ff:'system-ui',-apple-system,sans-serif;--fm:'Menlo','Consolas',monospace;
+  --bnav:56px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{height:100%;overscroll-behavior:none}
+body{font-family:var(--ff);font-size:14px;color:var(--text);background:var(--bg);height:100%;overflow:hidden}
+
+/* ══ LAYOUT ══════════════════════════════════════════ */
+.app{display:flex;flex:1;min-height:0;overflow:hidden}
+.sidebar{width:210px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;z-index:20}
+.main{flex:1;min-width:0;overflow-y:auto;overflow-x:hidden;background:var(--bg);scroll-behavior:smooth}
+.app-shell{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+
+/* ══ SIDEBAR ════════════════════════════════════════ */
+.logo{padding:16px 16px 14px;border-bottom:1px solid var(--border)}
+.logo-name{font-size:15px;font-weight:700;letter-spacing:-.2px}
+.logo-sub{font-size:11px;color:var(--text3);margin-top:1px}
+.nav{padding:6px 0}
+.ni{display:flex;align-items:center;gap:9px;padding:9px 14px;cursor:pointer;font-size:13px;color:var(--text2);border-left:2px solid transparent;transition:all .1s;user-select:none}
+.ni:hover{background:var(--bg3);color:var(--text)}
+.ni.on{background:var(--bg);color:var(--text);border-left-color:var(--accent);font-weight:500}
+.ni .ic{width:18px;text-align:center;font-size:15px;flex-shrink:0}
+.nbadge{margin-left:auto;background:var(--red-bg);color:var(--red);font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px;line-height:1.5}
+.sidebar-foot{margin-top:auto;padding:10px 14px 12px;border-top:1px solid var(--border)}
+.conn-row{display:flex;align-items:center;gap:7px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--text3);flex-shrink:0;transition:all .3s}
+.dot.live{background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.2);animation:glow 2s ease-in-out infinite}
+.dot.syncing{background:#f59e0b;animation:pulse .8s ease-in-out infinite}
+.dot.err{background:var(--red)}
+@keyframes glow{0%,100%{box-shadow:0 0 0 3px rgba(34,197,94,.2)}50%{box-shadow:0 0 0 5px rgba(34,197,94,.08)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.conn-label{font-size:11px;color:var(--text2);font-weight:500}
+.conn-time{font-size:10px;color:var(--text3);margin-top:2px}
+
+/* ══ MOBILE TOPBAR ══════════════════════════════════ */
+.topbar{display:none;position:sticky;top:0;z-index:25;background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 14px;align-items:center;justify-content:space-between;gap:10px;flex-shrink:0}
+.topbar-left{display:flex;align-items:center;gap:8px}
+.topbar-logo{font-size:15px;font-weight:700;letter-spacing:-.2px}
+.topbar-conn{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2)}
+.topbar-right{display:flex;align-items:center;gap:8px}
+
+/* ══ MOBILE BOTTOM NAV ══════════════════════════════ */
+.bnav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:30;padding-bottom:env(safe-area-inset-bottom,0px)}
+.bnav-inner{display:flex;height:var(--bnav)}
+.bni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;font-size:10px;color:var(--text3);border-top:2px solid transparent;transition:all .1s;position:relative;-webkit-tap-highlight-color:transparent}
+.bni.on{color:var(--accent);border-top-color:var(--accent)}
+.bni .bic{font-size:19px;line-height:1}
+.bni-badge{position:absolute;top:5px;right:calc(50% - 20px);background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:0 4px;border-radius:99px;min-width:14px;text-align:center;line-height:16px}
+
+/* ══ PAGES ══════════════════════════════════════════ */
+.page{display:none;padding:20px;padding-bottom:28px;animation:fadein .15s}
+.page.on{display:block}
+@keyframes fadein{from{opacity:.4}to{opacity:1}}
+
+/* ══ PAGE HEADER ════════════════════════════════════ */
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;gap:12px;flex-wrap:wrap}
+.ph-title{font-size:18px;font-weight:700;letter-spacing:-.3px}
+.ph-sub{font-size:12px;color:var(--text2);margin-top:2px}
+.ph-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+/* ══ LIVE INDICATOR ════════════════════════════════ */
+.live-pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--green);font-weight:600;background:var(--green-bg);padding:3px 9px;border-radius:99px;border:1px solid var(--green-bd)}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:glow 2s infinite}
+.offline-pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--red);font-weight:600;background:var(--red-bg);padding:3px 9px;border-radius:99px;border:1px solid var(--red-bd)}
+
+/* ══ BUTTONS ════════════════════════════════════════ */
+button{font-family:var(--ff);font-size:13px;padding:8px 14px;border:1px solid var(--border2);border-radius:var(--r6);background:var(--bg);color:var(--text);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .1s;white-space:nowrap;font-weight:500;touch-action:manipulation}
+button:hover{background:var(--bg3)}
+button:active{transform:scale(.97);opacity:.9}
+button.prim{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+button.prim:hover{opacity:.85}
+button.danger{background:var(--red-bg);color:var(--red);border-color:var(--red-bd)}
+button.sm{padding:6px 11px;font-size:12px}
+button:disabled{opacity:.45;cursor:not-allowed;transform:none}
+
+/* ══ CARDS ══════════════════════════════════════════ */
+.card{background:var(--bg);border:1px solid var(--border);border-radius:var(--r12);padding:18px;margin-bottom:14px;box-shadow:var(--shadow)}
+
+/* ══ METRICS GRID ════════════════════════════════ */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.metric{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8);padding:14px 16px}
+.metric .ml{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;font-weight:500}
+.metric .mv{font-size:24px;font-weight:700;margin-top:4px;letter-spacing:-.5px}
+.metric .md{font-size:11px;color:var(--text3);margin-top:2px}
+
+/* ══ FORM ════════════════════════════════════════ */
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
+.fg label{font-size:11px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+input,select,textarea{font-family:var(--ff);font-size:13px;padding:9px 11px;border:1px solid var(--border2);border-radius:var(--r6);background:var(--bg);color:var(--text);width:100%;outline:none;transition:border-color .12s,box-shadow .12s;-webkit-appearance:none;appearance:none}
+input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(17,17,16,.08)}
+input[readonly]{background:var(--bg2);color:var(--text2)}
+input.hi{background:var(--green-bg);border-color:var(--green-bd);font-weight:700;font-size:15px;color:var(--green)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.brow{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.form-title{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px}
+
+/* ══ TABLE ═════════════════════════════════════════ */
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--r8);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:380px}
+th{padding:9px 11px;text-align:left;font-size:11px;font-weight:600;color:var(--text2);border-bottom:1px solid var(--border);background:var(--bg2);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;position:sticky;top:0;z-index:2}
+td{padding:9px 11px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg2)}
+.fm{font-family:var(--fm);font-size:12px}
+
+/* ══ PILLS ══════════════════════════════════════════ */
+.pill{display:inline-block;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600}
+.pok{background:var(--green-bg);color:var(--green)}
+.plo{background:var(--amber-bg);color:var(--amber)}
+.pout{background:var(--red-bg);color:var(--red)}
+
+/* ══ TWO COL LAYOUT ═════════════════════════════════ */
+.tcol{display:grid;grid-template-columns:360px 1fr;gap:14px;align-items:start}
+
+/* ══ ENTRY NO ═══════════════════════════════════════ */
+.eno{font-family:var(--fm);font-size:22px;font-weight:700;letter-spacing:-.5px}
+
+/* ══ SEARCH BAR ════════════════════════════════════ */
+.search-bar{width:200px;font-size:12px;padding:6px 10px}
+
+/* ══ INFO BAR ═══════════════════════════════════════ */
+.info-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--r8);border:1px solid var(--blue-bd);background:var(--blue-bg);margin-bottom:16px;flex-wrap:wrap;font-size:12px;color:var(--blue)}
+.info-bar input{flex:1;min-width:160px;background:var(--bg);font-size:13px}
+.info-bar .ib-label{font-weight:600;white-space:nowrap}
+
+/* ══ TOAST ═══════════════════════════════════════════ */
+.toast{position:fixed;bottom:calc(var(--bnav) + 10px);left:50%;transform:translateX(-50%) translateY(10px);background:var(--text);color:#fff;border-radius:var(--r8);padding:10px 18px;font-size:13px;font-weight:500;box-shadow:var(--shadow2);opacity:0;transition:all .2s;z-index:999;white-space:nowrap;max-width:calc(100vw - 32px);text-align:center;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.ok{background:#166534}
+.toast.warn{background:#92400e}
+.toast.fail{background:var(--red)}
+
+/* ══ OVERLAY LOADER ══════════════════════════════════ */
+.overlay{position:fixed;inset:0;background:rgba(255,255,255,.75);backdrop-filter:blur(3px);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;opacity:0;pointer-events:none;transition:opacity .2s}
+.overlay.show{opacity:1;pointer-events:all}
+.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.overlay-msg{font-size:13px;color:var(--text2);font-weight:500}
+
+/* ══ SETUP CARD ══════════════════════════════════════ */
+.setup-card{max-width:660px}
+.step-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700;margin-right:8px;flex-shrink:0}
+.step-row{display:flex;align-items:flex-start;gap:0;margin-bottom:14px;font-size:13px;line-height:1.5}
+pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:11px;color:var(--text2);overflow-x:auto;line-height:1.7;white-space:pre;-webkit-overflow-scrolling:touch;max-height:320px}
+.chip{display:inline-block;font-family:var(--fm);background:var(--bg2);border:1px solid var(--border);padding:2px 9px;border-radius:var(--r4);font-size:12px}
+
+/* ══ CONNECTION BANNER ═══════════════════════════════ */
+.conn-banner{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-radius:var(--r8);margin-bottom:16px;font-size:12px;gap:10px;flex-wrap:wrap}
+.cb-live{background:var(--green-bg);border:1px solid var(--green-bd);color:var(--green)}
+.cb-off{background:var(--red-bg);border:1px solid var(--red-bd);color:var(--red)}
+.cb-wait{background:var(--amber-bg);border:1px solid var(--amber-bd);color:var(--amber)}
+.cb-left{display:flex;align-items:center;gap:8px;font-weight:600}
+
+/* ══ SYNC NOTE ════════════════════════════════════ */
+.sn{font-size:11px;margin-top:8px;padding:6px 10px;border-radius:var(--r4);display:none}
+.sn.syncing{display:block;background:var(--amber-bg);color:var(--amber)}
+.sn.done{display:block;background:var(--green-bg);color:var(--green)}
+.sn.fail{display:block;background:var(--red-bg);color:var(--red)}
+
+/* ══ PRODUCT PICKER MODAL ═══════════════════════════ */
+.ppModal{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.35);backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:opacity .15s}
+.ppModal.open{opacity:1;pointer-events:all}
+.ppBox{background:var(--bg);border-radius:var(--r12);box-shadow:var(--shadow2);width:100%;max-width:420px;display:flex;flex-direction:column;max-height:80vh;border:1px solid var(--border)}
+.ppHead{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
+.ppTitle{font-size:14px;font-weight:700}
+.ppClose{background:none;border:none;font-size:18px;color:var(--text2);padding:2px 6px;cursor:pointer;line-height:1}
+.ppSearch{padding:10px 12px;border-bottom:1px solid var(--border);flex-shrink:0}
+.ppSearch input{width:100%;font-size:13px;padding:8px 11px;border:1px solid var(--border2);border-radius:var(--r6);outline:none;background:var(--bg);color:var(--text)}
+.ppSearch input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(17,17,16,.08)}
+.ppList{overflow-y:auto;flex:1}
+.ppItem{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .08s}
+.ppItem:last-child{border-bottom:none}
+.ppItem:hover{background:var(--bg2)}
+.ppItem.active{background:var(--blue-bg)}
+.ppCode{font-family:var(--fm);font-size:11px;color:var(--text2);background:var(--bg3);padding:2px 7px;border-radius:var(--r4);border:1px solid var(--border);flex-shrink:0;min-width:52px;text-align:center}
+.ppName{font-size:13px;font-weight:500;flex:1}
+.ppUnit{font-size:11px;color:var(--text3)}
+.ppEmpty{padding:28px;text-align:center;color:var(--text3);font-size:13px}
+/* product-in-field display */
+.prod-pick-wrap{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;width:100%}
+.prod-pick-disp{
+  font-size:13px;padding:10px 12px;
+  border:1px solid var(--border2);border-radius:var(--r6);
+  background:var(--bg2);color:var(--text);
+  min-width:0;width:100%;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  cursor:default;line-height:1.4;
+}
+.prod-pick-disp.chosen{background:var(--bg);font-weight:500;color:var(--text)}
+.prod-pick-btn{
+  flex-shrink:0;white-space:nowrap;
+  font-size:13px;font-weight:600;padding:10px 16px;
+  background:var(--accent);color:var(--accent-fg);
+  border:none;border-radius:var(--r6);
+  cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+  touch-action:manipulation;
+}
+.prod-pick-btn:hover{opacity:.85}
+.prod-pick-btn:active{transform:scale(.97)}
+
+/* ════════════════ RESPONSIVE ════════════════════════ */
+@media(max-width:768px){
+  /* ── Core layout ── */
+  html,body{height:100%;height:100dvh;overflow:hidden}
+  .app-shell{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+  .app{flex:1;min-height:0;display:flex;overflow:hidden}
+  .sidebar{display:none}
+  .main{
+    flex:1;min-width:0;
+    overflow-y:auto;overflow-x:hidden;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior-y:contain;
+    scroll-padding-top:16px;
+    padding-bottom:calc(var(--bnav) + env(safe-area-inset-bottom,0px) + 20px);
+    scroll-padding-bottom:calc(var(--bnav) + 24px);
+  }
+
+  /* ── Topbar / Bottom nav ── */
+  .topbar{display:flex}
+  .bnav{display:block}
+  .bni .bic{font-size:20px;line-height:1.1}
+
+  /* ── Inputs — prevent iOS zoom + proper touch targets ── */
+  input:not([type="hidden"]),select,textarea{
+    font-size:16px!important;
+    min-height:48px;
+    padding:12px 14px!important;
+    border-radius:var(--r8)!important;
+  }
+  select{padding-right:36px!important}
+  button{min-height:44px}
+  button.sm{min-height:38px;font-size:12px;padding:6px 12px}
+
+  /* ── Pages ── */
+  .page{padding:14px;padding-bottom:24px}
+
+  /* ── Page header ── */
+  .ph{flex-direction:column;gap:8px;margin-bottom:14px}
+  .ph-title{font-size:20px}
+  .ph-right{width:100%;justify-content:space-between;gap:8px}
+
+  /* ── Grid layouts ── */
+  .tcol{grid-template-columns:1fr;gap:12px}
+  .g2{grid-template-columns:1fr 1fr;gap:10px}
+  .metrics{grid-template-columns:1fr 1fr;gap:8px}
+
+  /* ── Cards ── */
+  .card{padding:14px;margin-bottom:10px}
+
+  /* ── Metrics ── */
+  .metric{padding:12px 14px}
+  .metric .mv{font-size:22px}
+
+  /* ── Entry number ── */
+  .eno{font-size:18px}
+
+  /* ── Form groups ── */
+  .fg{gap:6px;margin-bottom:12px}
+  .fg label{font-size:12px;letter-spacing:.3px}
+
+  /* ── Brow — stack full-width on all mobile ── */
+  .brow{flex-direction:column;gap:10px;margin-top:16px}
+  .brow button{
+    width:100%;justify-content:center;
+    min-height:52px;font-size:15px;font-weight:600;
+    border-radius:var(--r8);padding:14px 16px;letter-spacing:-.1px;
+    white-space:normal;text-align:center;
+  }
+  #btnIN,#btnSaveProd{order:-1;box-shadow:0 2px 8px rgba(17,17,16,.18)}
+  #btnOUT{
+    order:-1;
+    background:var(--red)!important;color:#fff!important;border-color:var(--red)!important;
+    box-shadow:0 2px 8px rgba(155,21,21,.28);
+  }
+
+  /* ── IN/OUT tcol: form card full-width, table card below ── */
+  #page-stockin .tcol,
+  #page-stockout .tcol{
+    display:flex;flex-direction:column;gap:12px;
+  }
+  #page-stockin .tcol > div,
+  #page-stockout .tcol > div{
+    width:100%;min-width:0;
+  }
+  /* Table card: limit height on mobile so it doesn't push form off screen */
+  #page-stockin .tcol > div:last-child .tw,
+  #page-stockout .tcol > div:last-child .tw{
+    max-height:260px;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  }
+
+  /* ── Search inputs — full width, proper touch height ── */
+  #inSearch,#outSearch{width:100%!important;min-width:0;max-width:100%!important;font-size:16px!important;padding:10px 14px!important;min-height:44px}
+
+  /* ── Table card top bar — stack on mobile ── */
+  .tw-header{flex-direction:column!important;align-items:stretch!important;gap:8px!important}
+  .tw-header .form-title{margin-bottom:0}
+
+  /* ── Tables ── */
+  table{min-width:520px;font-size:12px}
+  th{font-size:10px;padding:8px 10px}
+  td{padding:8px 10px}
+  .tw{border-radius:var(--r6);overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+  /* ── Total value input ── */
+  input.hi{font-size:16px!important;font-weight:700}
+
+  /* ── Product picker ── */
+  .prod-pick-wrap{grid-template-columns:1fr auto;gap:8px}
+  .prod-pick-disp{font-size:15px;padding:12px 14px;min-height:48px}
+  .prod-pick-btn{min-width:90px;font-size:14px;padding:12<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>StockPOS Live</title>
 <style>
 :root{
   --bg:#ffffff;--bg2:#f8f8f7;--bg3:#f0efed;
