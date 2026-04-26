@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>StockPOS Live</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23111110'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='18' font-family='system-ui,sans-serif' font-weight='700' fill='white'>S</text></svg>">
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23111110'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='18' font-family='system-ui,sans-serif' font-weight='700' fill='white'>S</text></svg>">
 <style>
 :root{
   --bg:#ffffff;--bg2:#f8f8f7;--bg3:#f0efed;
@@ -26,14 +25,10 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{height:100%;overscroll-behavior:none}
 body{font-family:var(--ff);font-size:14px;color:var(--text);background:var(--bg);height:100%;overflow:hidden}
-
-/* ══ LAYOUT ══════════════════════════════════════════ */
 .app{display:flex;flex:1;min-height:0;overflow:hidden}
 .sidebar{width:210px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;z-index:20}
 .main{flex:1;min-width:0;overflow-y:auto;overflow-x:hidden;background:var(--bg);scroll-behavior:smooth}
 .app-shell{display:flex;flex-direction:column;height:100vh;overflow:hidden}
-
-/* ══ SIDEBAR ════════════════════════════════════════ */
 .logo{padding:16px 16px 14px;border-bottom:1px solid var(--border)}
 .logo-name{font-size:15px;font-weight:700;letter-spacing:-.2px}
 .logo-sub{font-size:11px;color:var(--text3);margin-top:1px}
@@ -53,39 +48,27 @@ body{font-family:var(--ff);font-size:14px;color:var(--text);background:var(--bg)
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
 .conn-label{font-size:11px;color:var(--text2);font-weight:500}
 .conn-time{font-size:10px;color:var(--text3);margin-top:2px}
-
-/* ══ MOBILE TOPBAR ══════════════════════════════════ */
 .topbar{display:none;position:sticky;top:0;z-index:25;background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 14px;align-items:center;justify-content:space-between;gap:10px;flex-shrink:0}
 .topbar-left{display:flex;align-items:center;gap:8px}
 .topbar-logo{font-size:15px;font-weight:700;letter-spacing:-.2px}
 .topbar-conn{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2)}
 .topbar-right{display:flex;align-items:center;gap:8px}
-
-/* ══ MOBILE BOTTOM NAV ══════════════════════════════ */
 .bnav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:30;padding-bottom:env(safe-area-inset-bottom,0px)}
 .bnav-inner{display:flex;height:var(--bnav)}
 .bni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;font-size:10px;color:var(--text3);border-top:2px solid transparent;transition:all .1s;position:relative;-webkit-tap-highlight-color:transparent}
 .bni.on{color:var(--accent);border-top-color:var(--accent)}
 .bni .bic{font-size:19px;line-height:1}
 .bni-badge{position:absolute;top:5px;right:calc(50% - 20px);background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:0 4px;border-radius:99px;min-width:14px;text-align:center;line-height:16px}
-
-/* ══ PAGES ══════════════════════════════════════════ */
 .page{display:none;padding:20px;padding-bottom:28px;animation:fadein .15s}
 .page.on{display:block}
 @keyframes fadein{from{opacity:.4}to{opacity:1}}
-
-/* ══ PAGE HEADER ════════════════════════════════════ */
 .ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;gap:12px;flex-wrap:wrap}
 .ph-title{font-size:18px;font-weight:700;letter-spacing:-.3px}
 .ph-sub{font-size:12px;color:var(--text2);margin-top:2px}
 .ph-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-
-/* ══ LIVE INDICATOR ════════════════════════════════ */
 .live-pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--green);font-weight:600;background:var(--green-bg);padding:3px 9px;border-radius:99px;border:1px solid var(--green-bd)}
 .live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:glow 2s infinite}
 .offline-pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--red);font-weight:600;background:var(--red-bg);padding:3px 9px;border-radius:99px;border:1px solid var(--red-bd)}
-
-/* ══ BUTTONS ════════════════════════════════════════ */
 button{font-family:var(--ff);font-size:13px;padding:8px 14px;border:1px solid var(--border2);border-radius:var(--r6);background:var(--bg);color:var(--text);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .1s;white-space:nowrap;font-weight:500;touch-action:manipulation}
 button:hover{background:var(--bg3)}
 button:active{transform:scale(.97);opacity:.9}
@@ -94,18 +77,12 @@ button.prim:hover{opacity:.85}
 button.danger{background:var(--red-bg);color:var(--red);border-color:var(--red-bd)}
 button.sm{padding:6px 11px;font-size:12px}
 button:disabled{opacity:.45;cursor:not-allowed;transform:none}
-
-/* ══ CARDS ══════════════════════════════════════════ */
 .card{background:var(--bg);border:1px solid var(--border);border-radius:var(--r12);padding:18px;margin-bottom:14px;box-shadow:var(--shadow)}
-
-/* ══ METRICS GRID ════════════════════════════════ */
 .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
 .metric{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8);padding:14px 16px}
 .metric .ml{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;font-weight:500}
 .metric .mv{font-size:24px;font-weight:700;margin-top:4px;letter-spacing:-.5px}
 .metric .md{font-size:11px;color:var(--text3);margin-top:2px}
-
-/* ══ FORM ════════════════════════════════════════ */
 .fg{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
 .fg label{font-size:11px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
 input,select,textarea{font-family:var(--ff);font-size:13px;padding:9px 11px;border:1px solid var(--border2);border-radius:var(--r6);background:var(--bg);color:var(--text);width:100%;outline:none;transition:border-color .12s,box-shadow .12s;-webkit-appearance:none;appearance:none}
@@ -115,8 +92,6 @@ input.hi{background:var(--green-bg);border-color:var(--green-bd);font-weight:700
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .brow{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
 .form-title{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px}
-
-/* ══ TABLE ═════════════════════════════════════════ */
 .tw{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--r8);border:1px solid var(--border)}
 table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:380px}
 th{padding:9px 11px;text-align:left;font-size:11px;font-weight:600;color:var(--text2);border-bottom:1px solid var(--border);background:var(--bg2);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;position:sticky;top:0;z-index:2}
@@ -124,62 +99,40 @@ td{padding:9px 11px;border-bottom:1px solid var(--border);vertical-align:middle}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:var(--bg2)}
 .fm{font-family:var(--fm);font-size:12px}
-
-/* ══ PILLS ══════════════════════════════════════════ */
 .pill{display:inline-block;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600}
 .pok{background:var(--green-bg);color:var(--green)}
 .plo{background:var(--amber-bg);color:var(--amber)}
 .pout{background:var(--red-bg);color:var(--red)}
-
-/* ══ TWO COL LAYOUT ═════════════════════════════════ */
 .tcol{display:grid;grid-template-columns:360px 1fr;gap:14px;align-items:start}
-
-/* ══ ENTRY NO ═══════════════════════════════════════ */
 .eno{font-family:var(--fm);font-size:22px;font-weight:700;letter-spacing:-.5px}
-
-/* ══ SEARCH BAR ════════════════════════════════════ */
 .search-bar{width:200px;font-size:12px;padding:6px 10px}
-
-/* ══ INFO BAR ═══════════════════════════════════════ */
 .info-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--r8);border:1px solid var(--blue-bd);background:var(--blue-bg);margin-bottom:16px;flex-wrap:wrap;font-size:12px;color:var(--blue)}
 .info-bar input{flex:1;min-width:160px;background:var(--bg);font-size:13px}
 .info-bar .ib-label{font-weight:600;white-space:nowrap}
-
-/* ══ TOAST ═══════════════════════════════════════════ */
 .toast{position:fixed;bottom:calc(var(--bnav) + 10px);left:50%;transform:translateX(-50%) translateY(10px);background:var(--text);color:#fff;border-radius:var(--r8);padding:10px 18px;font-size:13px;font-weight:500;box-shadow:var(--shadow2);opacity:0;transition:all .2s;z-index:999;white-space:nowrap;max-width:calc(100vw - 32px);text-align:center;pointer-events:none}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.ok{background:#166534}
 .toast.warn{background:#92400e}
 .toast.fail{background:var(--red)}
-
-/* ══ OVERLAY LOADER ══════════════════════════════════ */
 .overlay{position:fixed;inset:0;background:rgba(255,255,255,.75);backdrop-filter:blur(3px);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;opacity:0;pointer-events:none;transition:opacity .2s}
 .overlay.show{opacity:1;pointer-events:all}
 .spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .overlay-msg{font-size:13px;color:var(--text2);font-weight:500}
-
-/* ══ SETUP CARD ══════════════════════════════════════ */
 .setup-card{max-width:660px}
 .step-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700;margin-right:8px;flex-shrink:0}
 .step-row{display:flex;align-items:flex-start;gap:0;margin-bottom:14px;font-size:13px;line-height:1.5}
 pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:11px;color:var(--text2);overflow-x:auto;line-height:1.7;white-space:pre;-webkit-overflow-scrolling:touch;max-height:320px}
 .chip{display:inline-block;font-family:var(--fm);background:var(--bg2);border:1px solid var(--border);padding:2px 9px;border-radius:var(--r4);font-size:12px}
-
-/* ══ CONNECTION BANNER ═══════════════════════════════ */
 .conn-banner{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-radius:var(--r8);margin-bottom:16px;font-size:12px;gap:10px;flex-wrap:wrap}
 .cb-live{background:var(--green-bg);border:1px solid var(--green-bd);color:var(--green)}
 .cb-off{background:var(--red-bg);border:1px solid var(--red-bd);color:var(--red)}
 .cb-wait{background:var(--amber-bg);border:1px solid var(--amber-bd);color:var(--amber)}
 .cb-left{display:flex;align-items:center;gap:8px;font-weight:600}
-
-/* ══ SYNC NOTE ════════════════════════════════════ */
 .sn{font-size:11px;margin-top:8px;padding:6px 10px;border-radius:var(--r4);display:none}
 .sn.syncing{display:block;background:var(--amber-bg);color:var(--amber)}
 .sn.done{display:block;background:var(--green-bg);color:var(--green)}
 .sn.fail{display:block;background:var(--red-bg);color:var(--red)}
-
-/* ══ PRODUCT PICKER MODAL ═══════════════════════════ */
 .ppModal{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.35);backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:opacity .15s}
 .ppModal.open{opacity:1;pointer-events:all}
 .ppBox{background:var(--bg);border-radius:var(--r12);box-shadow:var(--shadow2);width:100%;max-width:420px;display:flex;flex-direction:column;max-height:80vh;border:1px solid var(--border)}
@@ -198,596 +151,125 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
 .ppName{font-size:13px;font-weight:500;flex:1}
 .ppUnit{font-size:11px;color:var(--text3)}
 .ppEmpty{padding:28px;text-align:center;color:var(--text3);font-size:13px}
-/* product-in-field display */
 .prod-pick-wrap{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;width:100%}
-.prod-pick-disp{
-  font-size:13px;padding:10px 12px;
-  border:1px solid var(--border2);border-radius:var(--r6);
-  background:var(--bg2);color:var(--text);
-  min-width:0;width:100%;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  cursor:default;line-height:1.4;
-}
+.prod-pick-disp{font-size:13px;padding:10px 12px;border:1px solid var(--border2);border-radius:var(--r6);background:var(--bg2);color:var(--text);min-width:0;width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:default;line-height:1.4}
 .prod-pick-disp.chosen{background:var(--bg);font-weight:500;color:var(--text)}
-.prod-pick-btn{
-  flex-shrink:0;white-space:nowrap;
-  font-size:13px;font-weight:600;padding:10px 16px;
-  background:var(--accent);color:var(--accent-fg);
-  border:none;border-radius:var(--r6);
-  cursor:pointer;display:inline-flex;align-items:center;gap:6px;
-  touch-action:manipulation;
-}
+.prod-pick-btn{flex-shrink:0;white-space:nowrap;font-size:13px;font-weight:600;padding:10px 16px;background:var(--accent);color:var(--accent-fg);border:none;border-radius:var(--r6);cursor:pointer;display:inline-flex;align-items:center;gap:6px;touch-action:manipulation}
 .prod-pick-btn:hover{opacity:.85}
 .prod-pick-btn:active{transform:scale(.97)}
-
-/* ════════════════ RESPONSIVE ════════════════════════ */
 @media(max-width:768px){
-  /* ── Core layout ── */
   html,body{height:100%;height:100dvh;overflow:hidden}
   .app-shell{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
   .app{flex:1;min-height:0;display:flex;overflow:hidden}
   .sidebar{display:none}
-  .main{
-    flex:1;min-width:0;
-    overflow-y:auto;overflow-x:hidden;
-    -webkit-overflow-scrolling:touch;
-    overscroll-behavior-y:contain;
-    scroll-padding-top:16px;
-    padding-bottom:calc(var(--bnav) + env(safe-area-inset-bottom,0px) + 20px);
-    scroll-padding-bottom:calc(var(--bnav) + 24px);
-  }
-
-  /* ── Topbar / Bottom nav ── */
+  .main{flex:1;min-width:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;scroll-padding-top:16px;padding-bottom:calc(var(--bnav) + env(safe-area-inset-bottom,0px) + 20px);scroll-padding-bottom:calc(var(--bnav) + 24px)}
   .topbar{display:flex}
   .bnav{display:block}
   .bni .bic{font-size:20px;line-height:1.1}
-
-  /* ── Inputs — prevent iOS zoom + proper touch targets ── */
-  input:not([type="hidden"]),select,textarea{
-    font-size:16px!important;
-    min-height:48px;
-    padding:12px 14px!important;
-    border-radius:var(--r8)!important;
-  }
+  input:not([type="hidden"]),select,textarea{font-size:16px!important;min-height:48px;padding:12px 14px!important;border-radius:var(--r8)!important}
   select{padding-right:36px!important}
   button{min-height:44px}
   button.sm{min-height:38px;font-size:12px;padding:6px 12px}
-
-  /* ── Pages ── */
   .page{padding:14px;padding-bottom:24px}
-
-  /* ── Page header ── */
   .ph{flex-direction:column;gap:8px;margin-bottom:14px}
   .ph-title{font-size:20px}
   .ph-right{width:100%;justify-content:space-between;gap:8px}
-
-  /* ── Grid layouts ── */
   .tcol{grid-template-columns:1fr;gap:12px}
   .g2{grid-template-columns:1fr 1fr;gap:10px}
   .metrics{grid-template-columns:1fr 1fr;gap:8px}
-
-  /* ── Cards ── */
   .card{padding:14px;margin-bottom:10px}
-
-  /* ── Metrics ── */
   .metric{padding:12px 14px}
   .metric .mv{font-size:22px}
-
-  /* ── Entry number ── */
   .eno{font-size:18px}
-
-  /* ── Form groups ── */
   .fg{gap:6px;margin-bottom:12px}
   .fg label{font-size:12px;letter-spacing:.3px}
-
-  /* ── Brow — stack full-width on all mobile ── */
   .brow{flex-direction:column;gap:10px;margin-top:16px}
-  .brow button{
-    width:100%;justify-content:center;
-    min-height:52px;font-size:15px;font-weight:600;
-    border-radius:var(--r8);padding:14px 16px;letter-spacing:-.1px;
-    white-space:normal;text-align:center;
-  }
+  .brow button{width:100%;justify-content:center;min-height:52px;font-size:15px;font-weight:600;border-radius:var(--r8);padding:14px 16px;letter-spacing:-.1px;white-space:normal;text-align:center}
   #btnIN,#btnSaveProd{order:-1;box-shadow:0 2px 8px rgba(17,17,16,.18)}
-  #btnOUT{
-    order:-1;
-    background:var(--red)!important;color:#fff!important;border-color:var(--red)!important;
-    box-shadow:0 2px 8px rgba(155,21,21,.28);
-  }
-
-  /* ── IN/OUT tcol: form card full-width, table card below ── */
-  #page-stockin .tcol,
-  #page-stockout .tcol{
-    display:flex;flex-direction:column;gap:12px;
-  }
-  #page-stockin .tcol > div,
-  #page-stockout .tcol > div{
-    width:100%;min-width:0;
-  }
-  /* Table card: limit height on mobile so it doesn't push form off screen */
-  #page-stockin .tcol > div:last-child .tw,
-  #page-stockout .tcol > div:last-child .tw{
-    max-height:260px;overflow-y:auto;-webkit-overflow-scrolling:touch;
-  }
-
-  /* ── Search inputs — full width, proper touch height ── */
+  #btnOUT{order:-1;background:var(--red)!important;color:#fff!important;border-color:var(--red)!important;box-shadow:0 2px 8px rgba(155,21,21,.28)}
+  #page-stockin .tcol,#page-stockout .tcol{display:flex;flex-direction:column;gap:12px}
+  #page-stockin .tcol > div,#page-stockout .tcol > div{width:100%;min-width:0}
+  #page-stockin .tcol > div:last-child .tw,#page-stockout .tcol > div:last-child .tw{max-height:260px;overflow-y:auto;-webkit-overflow-scrolling:touch}
   #inSearch,#outSearch{width:100%!important;min-width:0;max-width:100%!important;font-size:16px!important;padding:10px 14px!important;min-height:44px}
-
-  /* ── Table card top bar — stack on mobile ── */
   .tw-header{flex-direction:column!important;align-items:stretch!important;gap:8px!important}
   .tw-header .form-title{margin-bottom:0}
-
-  /* ── Tables ── */
   table{min-width:520px;font-size:12px}
   th{font-size:10px;padding:8px 10px}
   td{padding:8px 10px}
   .tw{border-radius:var(--r6);overflow-x:auto;-webkit-overflow-scrolling:touch}
-
-  /* ── Total value input ── */
   input.hi{font-size:16px!important;font-weight:700}
-
-  /* ── Product picker ── */
-  .prod-pick-wrap{grid-template-columns:1fr auto;gap:8px}
-  .prod-pick-disp{font-size:15px;padding:12px 14px;min-height:48px}
-  .prod-pick-btn{min-width:90px;font-size:14px;padding:12<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>StockPOS Live</title>
-<style>
-:root{
-  --bg:#ffffff;--bg2:#f8f8f7;--bg3:#f0efed;
-  --text:#111110;--text2:#5c5c57;--text3:#9a9a94;
-  --border:#e3e2df;--border2:#cccbc6;
-  --accent:#111110;--accent-fg:#ffffff;
-  --green:#146c3a;--green-bg:#edf7f1;--green-bd:#a8dbbf;
-  --amber:#7a4800;--amber-bg:#fffaeb;--amber-bd:#f0d080;
-  --red:#9b1515;--red-bg:#fff1f1;--red-bd:#f8a8a8;
-  --blue:#1e3a8a;--blue-bg:#eef4ff;--blue-bd:#93bffd;
-  --purple:#5b21b6;--purple-bg:#f3f0ff;
-  --r4:4px;--r6:6px;--r8:8px;--r12:12px;
-  --shadow:0 1px 3px rgba(0,0,0,.07),0 4px 12px rgba(0,0,0,.04);
-  --shadow2:0 2px 8px rgba(0,0,0,.1),0 8px 24px rgba(0,0,0,.06);
-  --ff:'system-ui',-apple-system,sans-serif;--fm:'Menlo','Consolas',monospace;
-  --bnav:56px;
-}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{height:100%;overscroll-behavior:none}
-body{font-family:var(--ff);font-size:14px;color:var(--text);background:var(--bg);height:100%;overflow:hidden}
-
-/* ══ LAYOUT ══════════════════════════════════════════ */
-.app{display:flex;flex:1;min-height:0;overflow:hidden}
-.sidebar{width:210px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;z-index:20}
-.main{flex:1;min-width:0;overflow-y:auto;overflow-x:hidden;background:var(--bg);scroll-behavior:smooth}
-.app-shell{display:flex;flex-direction:column;height:100vh;overflow:hidden}
-
-/* ══ SIDEBAR ════════════════════════════════════════ */
-.logo{padding:16px 16px 14px;border-bottom:1px solid var(--border)}
-.logo-name{font-size:15px;font-weight:700;letter-spacing:-.2px}
-.logo-sub{font-size:11px;color:var(--text3);margin-top:1px}
-.nav{padding:6px 0}
-.ni{display:flex;align-items:center;gap:9px;padding:9px 14px;cursor:pointer;font-size:13px;color:var(--text2);border-left:2px solid transparent;transition:all .1s;user-select:none}
-.ni:hover{background:var(--bg3);color:var(--text)}
-.ni.on{background:var(--bg);color:var(--text);border-left-color:var(--accent);font-weight:500}
-.ni .ic{width:18px;text-align:center;font-size:15px;flex-shrink:0}
-.nbadge{margin-left:auto;background:var(--red-bg);color:var(--red);font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px;line-height:1.5}
-.sidebar-foot{margin-top:auto;padding:10px 14px 12px;border-top:1px solid var(--border)}
-.conn-row{display:flex;align-items:center;gap:7px}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--text3);flex-shrink:0;transition:all .3s}
-.dot.live{background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.2);animation:glow 2s ease-in-out infinite}
-.dot.syncing{background:#f59e0b;animation:pulse .8s ease-in-out infinite}
-.dot.err{background:var(--red)}
-@keyframes glow{0%,100%{box-shadow:0 0 0 3px rgba(34,197,94,.2)}50%{box-shadow:0 0 0 5px rgba(34,197,94,.08)}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-.conn-label{font-size:11px;color:var(--text2);font-weight:500}
-.conn-time{font-size:10px;color:var(--text3);margin-top:2px}
-
-/* ══ MOBILE TOPBAR ══════════════════════════════════ */
-.topbar{display:none;position:sticky;top:0;z-index:25;background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 14px;align-items:center;justify-content:space-between;gap:10px;flex-shrink:0}
-.topbar-left{display:flex;align-items:center;gap:8px}
-.topbar-logo{font-size:15px;font-weight:700;letter-spacing:-.2px}
-.topbar-conn{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2)}
-.topbar-right{display:flex;align-items:center;gap:8px}
-
-/* ══ MOBILE BOTTOM NAV ══════════════════════════════ */
-.bnav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:30;padding-bottom:env(safe-area-inset-bottom,0px)}
-.bnav-inner{display:flex;height:var(--bnav)}
-.bni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;font-size:10px;color:var(--text3);border-top:2px solid transparent;transition:all .1s;position:relative;-webkit-tap-highlight-color:transparent}
-.bni.on{color:var(--accent);border-top-color:var(--accent)}
-.bni .bic{font-size:19px;line-height:1}
-.bni-badge{position:absolute;top:5px;right:calc(50% - 20px);background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:0 4px;border-radius:99px;min-width:14px;text-align:center;line-height:16px}
-
-/* ══ PAGES ══════════════════════════════════════════ */
-.page{display:none;padding:20px;padding-bottom:28px;animation:fadein .15s}
-.page.on{display:block}
-@keyframes fadein{from{opacity:.4}to{opacity:1}}
-
-/* ══ PAGE HEADER ════════════════════════════════════ */
-.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;gap:12px;flex-wrap:wrap}
-.ph-title{font-size:18px;font-weight:700;letter-spacing:-.3px}
-.ph-sub{font-size:12px;color:var(--text2);margin-top:2px}
-.ph-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-
-/* ══ LIVE INDICATOR ════════════════════════════════ */
-.live-pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--green);font-weight:600;background:var(--green-bg);padding:3px 9px;border-radius:99px;border:1px solid var(--green-bd)}
-.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:glow 2s infinite}
-.offline-pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--red);font-weight:600;background:var(--red-bg);padding:3px 9px;border-radius:99px;border:1px solid var(--red-bd)}
-
-/* ══ BUTTONS ════════════════════════════════════════ */
-button{font-family:var(--ff);font-size:13px;padding:8px 14px;border:1px solid var(--border2);border-radius:var(--r6);background:var(--bg);color:var(--text);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .1s;white-space:nowrap;font-weight:500;touch-action:manipulation}
-button:hover{background:var(--bg3)}
-button:active{transform:scale(.97);opacity:.9}
-button.prim{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
-button.prim:hover{opacity:.85}
-button.danger{background:var(--red-bg);color:var(--red);border-color:var(--red-bd)}
-button.sm{padding:6px 11px;font-size:12px}
-button:disabled{opacity:.45;cursor:not-allowed;transform:none}
-
-/* ══ CARDS ══════════════════════════════════════════ */
-.card{background:var(--bg);border:1px solid var(--border);border-radius:var(--r12);padding:18px;margin-bottom:14px;box-shadow:var(--shadow)}
-
-/* ══ METRICS GRID ════════════════════════════════ */
-.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
-.metric{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8);padding:14px 16px}
-.metric .ml{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;font-weight:500}
-.metric .mv{font-size:24px;font-weight:700;margin-top:4px;letter-spacing:-.5px}
-.metric .md{font-size:11px;color:var(--text3);margin-top:2px}
-
-/* ══ FORM ════════════════════════════════════════ */
-.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
-.fg label{font-size:11px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
-input,select,textarea{font-family:var(--ff);font-size:13px;padding:9px 11px;border:1px solid var(--border2);border-radius:var(--r6);background:var(--bg);color:var(--text);width:100%;outline:none;transition:border-color .12s,box-shadow .12s;-webkit-appearance:none;appearance:none}
-input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(17,17,16,.08)}
-input[readonly]{background:var(--bg2);color:var(--text2)}
-input.hi{background:var(--green-bg);border-color:var(--green-bd);font-weight:700;font-size:15px;color:var(--green)}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.brow{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
-.form-title{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px}
-
-/* ══ TABLE ═════════════════════════════════════════ */
-.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--r8);border:1px solid var(--border)}
-table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:380px}
-th{padding:9px 11px;text-align:left;font-size:11px;font-weight:600;color:var(--text2);border-bottom:1px solid var(--border);background:var(--bg2);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;position:sticky;top:0;z-index:2}
-td{padding:9px 11px;border-bottom:1px solid var(--border);vertical-align:middle}
-tr:last-child td{border-bottom:none}
-tr:hover td{background:var(--bg2)}
-.fm{font-family:var(--fm);font-size:12px}
-
-/* ══ PILLS ══════════════════════════════════════════ */
-.pill{display:inline-block;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600}
-.pok{background:var(--green-bg);color:var(--green)}
-.plo{background:var(--amber-bg);color:var(--amber)}
-.pout{background:var(--red-bg);color:var(--red)}
-
-/* ══ TWO COL LAYOUT ═════════════════════════════════ */
-.tcol{display:grid;grid-template-columns:360px 1fr;gap:14px;align-items:start}
-
-/* ══ ENTRY NO ═══════════════════════════════════════ */
-.eno{font-family:var(--fm);font-size:22px;font-weight:700;letter-spacing:-.5px}
-
-/* ══ SEARCH BAR ════════════════════════════════════ */
-.search-bar{width:200px;font-size:12px;padding:6px 10px}
-
-/* ══ INFO BAR ═══════════════════════════════════════ */
-.info-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--r8);border:1px solid var(--blue-bd);background:var(--blue-bg);margin-bottom:16px;flex-wrap:wrap;font-size:12px;color:var(--blue)}
-.info-bar input{flex:1;min-width:160px;background:var(--bg);font-size:13px}
-.info-bar .ib-label{font-weight:600;white-space:nowrap}
-
-/* ══ TOAST ═══════════════════════════════════════════ */
-.toast{position:fixed;bottom:calc(var(--bnav) + 10px);left:50%;transform:translateX(-50%) translateY(10px);background:var(--text);color:#fff;border-radius:var(--r8);padding:10px 18px;font-size:13px;font-weight:500;box-shadow:var(--shadow2);opacity:0;transition:all .2s;z-index:999;white-space:nowrap;max-width:calc(100vw - 32px);text-align:center;pointer-events:none}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.toast.ok{background:#166534}
-.toast.warn{background:#92400e}
-.toast.fail{background:var(--red)}
-
-/* ══ OVERLAY LOADER ══════════════════════════════════ */
-.overlay{position:fixed;inset:0;background:rgba(255,255,255,.75);backdrop-filter:blur(3px);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;opacity:0;pointer-events:none;transition:opacity .2s}
-.overlay.show{opacity:1;pointer-events:all}
-.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.overlay-msg{font-size:13px;color:var(--text2);font-weight:500}
-
-/* ══ SETUP CARD ══════════════════════════════════════ */
-.setup-card{max-width:660px}
-.step-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700;margin-right:8px;flex-shrink:0}
-.step-row{display:flex;align-items:flex-start;gap:0;margin-bottom:14px;font-size:13px;line-height:1.5}
-pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:11px;color:var(--text2);overflow-x:auto;line-height:1.7;white-space:pre;-webkit-overflow-scrolling:touch;max-height:320px}
-.chip{display:inline-block;font-family:var(--fm);background:var(--bg2);border:1px solid var(--border);padding:2px 9px;border-radius:var(--r4);font-size:12px}
-
-/* ══ CONNECTION BANNER ═══════════════════════════════ */
-.conn-banner{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-radius:var(--r8);margin-bottom:16px;font-size:12px;gap:10px;flex-wrap:wrap}
-.cb-live{background:var(--green-bg);border:1px solid var(--green-bd);color:var(--green)}
-.cb-off{background:var(--red-bg);border:1px solid var(--red-bd);color:var(--red)}
-.cb-wait{background:var(--amber-bg);border:1px solid var(--amber-bd);color:var(--amber)}
-.cb-left{display:flex;align-items:center;gap:8px;font-weight:600}
-
-/* ══ SYNC NOTE ════════════════════════════════════ */
-.sn{font-size:11px;margin-top:8px;padding:6px 10px;border-radius:var(--r4);display:none}
-.sn.syncing{display:block;background:var(--amber-bg);color:var(--amber)}
-.sn.done{display:block;background:var(--green-bg);color:var(--green)}
-.sn.fail{display:block;background:var(--red-bg);color:var(--red)}
-
-/* ══ PRODUCT PICKER MODAL ═══════════════════════════ */
-.ppModal{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.35);backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:opacity .15s}
-.ppModal.open{opacity:1;pointer-events:all}
-.ppBox{background:var(--bg);border-radius:var(--r12);box-shadow:var(--shadow2);width:100%;max-width:420px;display:flex;flex-direction:column;max-height:80vh;border:1px solid var(--border)}
-.ppHead{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
-.ppTitle{font-size:14px;font-weight:700}
-.ppClose{background:none;border:none;font-size:18px;color:var(--text2);padding:2px 6px;cursor:pointer;line-height:1}
-.ppSearch{padding:10px 12px;border-bottom:1px solid var(--border);flex-shrink:0}
-.ppSearch input{width:100%;font-size:13px;padding:8px 11px;border:1px solid var(--border2);border-radius:var(--r6);outline:none;background:var(--bg);color:var(--text)}
-.ppSearch input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(17,17,16,.08)}
-.ppList{overflow-y:auto;flex:1}
-.ppItem{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .08s}
-.ppItem:last-child{border-bottom:none}
-.ppItem:hover{background:var(--bg2)}
-.ppItem.active{background:var(--blue-bg)}
-.ppCode{font-family:var(--fm);font-size:11px;color:var(--text2);background:var(--bg3);padding:2px 7px;border-radius:var(--r4);border:1px solid var(--border);flex-shrink:0;min-width:52px;text-align:center}
-.ppName{font-size:13px;font-weight:500;flex:1}
-.ppUnit{font-size:11px;color:var(--text3)}
-.ppEmpty{padding:28px;text-align:center;color:var(--text3);font-size:13px}
-/* product-in-field display */
-.prod-pick-wrap{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;width:100%}
-.prod-pick-disp{
-  font-size:13px;padding:10px 12px;
-  border:1px solid var(--border2);border-radius:var(--r6);
-  background:var(--bg2);color:var(--text);
-  min-width:0;width:100%;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  cursor:default;line-height:1.4;
-}
-.prod-pick-disp.chosen{background:var(--bg);font-weight:500;color:var(--text)}
-.prod-pick-btn{
-  flex-shrink:0;white-space:nowrap;
-  font-size:13px;font-weight:600;padding:10px 16px;
-  background:var(--accent);color:var(--accent-fg);
-  border:none;border-radius:var(--r6);
-  cursor:pointer;display:inline-flex;align-items:center;gap:6px;
-  touch-action:manipulation;
-}
-.prod-pick-btn:hover{opacity:.85}
-.prod-pick-btn:active{transform:scale(.97)}
-
-/* ════════════════ RESPONSIVE ════════════════════════ */
-@media(max-width:768px){
-  /* ── Core layout ── */
-  html,body{height:100%;height:100dvh;overflow:hidden}
-  .app-shell{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
-  .app{flex:1;min-height:0;display:flex;overflow:hidden}
-  .sidebar{display:none}
-  .main{
-    flex:1;min-width:0;
-    overflow-y:auto;overflow-x:hidden;
-    -webkit-overflow-scrolling:touch;
-    overscroll-behavior-y:contain;
-    scroll-padding-top:16px;
-    padding-bottom:calc(var(--bnav) + env(safe-area-inset-bottom,0px) + 20px);
-    scroll-padding-bottom:calc(var(--bnav) + 24px);
-  }
-
-  /* ── Topbar / Bottom nav ── */
-  .topbar{display:flex}
-  .bnav{display:block}
-  .bni .bic{font-size:20px;line-height:1.1}
-
-  /* ── Inputs — prevent iOS zoom + proper touch targets ── */
-  input:not([type="hidden"]),select,textarea{
-    font-size:16px!important;
-    min-height:48px;
-    padding:12px 14px!important;
-    border-radius:var(--r8)!important;
-  }
-  select{padding-right:36px!important}
-  button{min-height:44px}
-  button.sm{min-height:38px;font-size:12px;padding:6px 12px}
-
-  /* ── Pages ── */
-  .page{padding:14px;padding-bottom:24px}
-
-  /* ── Page header ── */
-  .ph{flex-direction:column;gap:8px;margin-bottom:14px}
-  .ph-title{font-size:20px}
-  .ph-right{width:100%;justify-content:space-between;gap:8px}
-
-  /* ── Grid layouts ── */
-  .tcol{grid-template-columns:1fr;gap:12px}
-  .g2{grid-template-columns:1fr 1fr;gap:10px}
-  .metrics{grid-template-columns:1fr 1fr;gap:8px}
-
-  /* ── Cards ── */
-  .card{padding:14px;margin-bottom:10px}
-
-  /* ── Metrics ── */
-  .metric{padding:12px 14px}
-  .metric .mv{font-size:22px}
-
-  /* ── Entry number ── */
-  .eno{font-size:18px}
-
-  /* ── Form groups ── */
-  .fg{gap:6px;margin-bottom:12px}
-  .fg label{font-size:12px;letter-spacing:.3px}
-
-  /* ── Brow — stack full-width on all mobile ── */
-  .brow{flex-direction:column;gap:10px;margin-top:16px}
-  .brow button{
-    width:100%;justify-content:center;
-    min-height:52px;font-size:15px;font-weight:600;
-    border-radius:var(--r8);padding:14px 16px;letter-spacing:-.1px;
-    white-space:normal;text-align:center;
-  }
-  #btnIN,#btnSaveProd{order:-1;box-shadow:0 2px 8px rgba(17,17,16,.18)}
-  #btnOUT{
-    order:-1;
-    background:var(--red)!important;color:#fff!important;border-color:var(--red)!important;
-    box-shadow:0 2px 8px rgba(155,21,21,.28);
-  }
-
-  /* ── IN/OUT tcol: form card full-width, table card below ── */
-  #page-stockin .tcol,
-  #page-stockout .tcol{
-    display:flex;flex-direction:column;gap:12px;
-  }
-  #page-stockin .tcol > div,
-  #page-stockout .tcol > div{
-    width:100%;min-width:0;
-  }
-  /* Table card: limit height on mobile so it doesn't push form off screen */
-  #page-stockin .tcol > div:last-child .tw,
-  #page-stockout .tcol > div:last-child .tw{
-    max-height:260px;overflow-y:auto;-webkit-overflow-scrolling:touch;
-  }
-
-  /* ── Search inputs — full width, proper touch height ── */
-  #inSearch,#outSearch{width:100%!important;min-width:0;max-width:100%!important;font-size:16px!important;padding:10px 14px!important;min-height:44px}
-
-  /* ── Table card top bar — stack on mobile ── */
-  .tw-header{flex-direction:column!important;align-items:stretch!important;gap:8px!important}
-  .tw-header .form-title{margin-bottom:0}
-
-  /* ── Tables ── */
-  table{min-width:520px;font-size:12px}
-  th{font-size:10px;padding:8px 10px}
-  td{padding:8px 10px}
-  .tw{border-radius:var(--r6);overflow-x:auto;-webkit-overflow-scrolling:touch}
-
-  /* ── Total value input ── */
-  input.hi{font-size:16px!important;font-weight:700}
-
-  /* ── Product picker ── */
   .prod-pick-wrap{grid-template-columns:1fr auto;gap:8px}
   .prod-pick-disp{font-size:15px;padding:12px 14px;min-height:48px}
   .prod-pick-btn{min-width:90px;font-size:14px;padding:12px 16px}
-
-  /* ── Conn banner ── */
   .conn-banner{padding:10px 12px;font-size:12px}
-
-  /* ── Sync note ── */
   .sn{font-size:12px;padding:10px 12px;border-radius:var(--r6);margin-top:10px}
-
-  /* ── Setup ── */
   .setup-card{max-width:100%}
   pre{font-size:10px;max-height:220px}
+  #curSearch{width:100%!important;min-width:0;max-width:100%!important;font-size:16px!important;padding:10px 14px!important;min-height:44px}
 }
-
-/* ════════════════ SMALL PHONES ≤ 480px ═════════════ */
 @media(max-width:480px){
-  /* ── Pages ── */
   .page{padding:12px 12px 16px}
-
-  /* ── Single-column grids ── */
   .g2{grid-template-columns:1fr;gap:10px}
-
-  /* ── Metric values ── */
   .metric .mv{font-size:20px}
   .metric .ml{font-size:10px}
   .metric{padding:10px 12px}
-
-  /* ── Page header ── */
   .ph-right{flex-direction:column;gap:8px;align-items:stretch}
-  .ph-right button,
-  .ph-right .live-pill,
-  .ph-right .offline-pill{width:100%;justify-content:center;text-align:center}
-
-  /* ── Cards ── */
+  .ph-right button,.ph-right .live-pill,.ph-right .offline-pill{width:100%;justify-content:center;text-align:center}
   .card{padding:12px;margin-bottom:10px;border-radius:var(--r8)}
-
-  /* ── Brow — stacked full-width ── */
   .brow{flex-direction:column;gap:10px;margin-top:16px}
-  .brow button{
-    width:100%;justify-content:center;
-    min-height:52px;font-size:15px;font-weight:600;
-    border-radius:var(--r8);padding:14px 16px;letter-spacing:-.1px;
-    white-space:normal;text-align:center;
-  }
-  /* Primary actions float to top */
+  .brow button{width:100%;justify-content:center;min-height:52px;font-size:15px;font-weight:600;border-radius:var(--r8);padding:14px 16px;letter-spacing:-.1px;white-space:normal;text-align:center}
   #btnIN,#btnSaveProd{order:-1;box-shadow:0 2px 8px rgba(17,17,16,.18)}
-  #btnOUT{
-    order:-1;
-    background:var(--red)!important;color:#fff!important;border-color:var(--red)!important;
-    box-shadow:0 2px 8px rgba(155,21,21,.28);
-  }
-
-  /* ── IN/OUT table card — contained on small screens ── */
-  #page-stockin .tcol > div:last-child .tw,
-  #page-stockout .tcol > div:last-child .tw{
-    max-height:240px;overflow-y:auto;-webkit-overflow-scrolling:touch;
-  }
-
-  /* ── Total value ── */
+  #btnOUT{order:-1;background:var(--red)!important;color:#fff!important;border-color:var(--red)!important;box-shadow:0 2px 8px rgba(155,21,21,.28)}
+  #page-stockin .tcol > div:last-child .tw,#page-stockout .tcol > div:last-child .tw{max-height:240px;overflow-y:auto;-webkit-overflow-scrolling:touch}
   input.hi{font-size:20px!important;padding:16px 14px!important;text-align:center;font-weight:700;letter-spacing:-.3px}
-
-  /* ── Product picker — full stacked ── */
   .prod-pick-wrap{grid-template-columns:1fr;gap:8px}
   .prod-pick-disp{font-size:16px;padding:14px;min-height:52px;line-height:1.3;border-radius:var(--r8)!important}
   .prod-pick-btn{width:100%;justify-content:center;font-size:15px;padding:14px 16px;border-radius:var(--r8);min-height:52px}
-
-  /* ── Product picker modal — bottom sheet ── */
   .ppModal{align-items:flex-end;padding:0}
   .ppBox{max-height:88vh;border-radius:var(--r12) var(--r12) 0 0;padding-bottom:env(safe-area-inset-bottom,0px)}
   .ppSearch input{font-size:16px!important;min-height:44px;padding:10px 14px}
   .ppItem{padding:14px 16px;min-height:52px}
   .ppName{font-size:14px}
-
-  /* ── Info bar ── */
   .info-bar{flex-direction:column;align-items:stretch;gap:8px}
-
-  /* ── Search bars full width ── */
-  #inSearch,#outSearch,.search-bar{width:100%!important;min-width:0}
-
-  /* ── Entry no ── */
+  #inSearch,#outSearch,.search-bar,#curSearch{width:100%!important;min-width:0}
   .eno{font-size:17px}
-
-  /* ── Connection pills ── */
   .conn-banner{font-size:11px;padding:8px 12px}
   .offline-pill,.live-pill{font-size:11px}
-
-  /* ── Setup page buttons ── */
   #page-setup .brow{flex-direction:column;gap:10px}
   #page-setup .brow button{width:100%;justify-content:center;min-height:52px;font-size:15px;border-radius:var(--r8)}
 }
 </style>
 </head>
 <body>
-
-<!-- OVERLAY LOADER -->
 <div class="overlay" id="overlay">
   <div class="spinner"></div>
-  <div class="overlay-msg" id="overlayMsg">Connecting to Google Sheets…</div>
+  <div class="overlay-msg" id="overlayMsg">Connecting to Google Sheets\u2026</div>
 </div>
-
 <div class="app-shell">
-
-<!-- MOBILE TOPBAR -->
 <div class="topbar">
   <div class="topbar-left">
     <div class="topbar-logo">StockPOS</div>
     <div class="topbar-conn">
       <span class="dot" id="topDot"></span>
-      <span id="topLabel">—</span>
+      <span id="topLabel">\u2014</span>
     </div>
   </div>
   <div class="topbar-right">
-    <button class="sm" onclick="syncNow()" id="btnSyncTop">↻ Sync</button>
+    <button class="sm" onclick="syncNow()" id="btnSyncTop">\u21bb Sync</button>
   </div>
 </div>
-
-<!-- APP -->
 <div class="app">
-
-<!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="logo">
     <div class="logo-name">StockPOS</div>
     <div class="logo-sub">Live Google Sheets System</div>
   </div>
   <nav class="nav">
-    <div class="ni on" onclick="go('products')" id="ni-products"><span class="ic">⊞</span>Products</div>
-    <div class="ni" onclick="go('stockin')"   id="ni-stockin" ><span class="ic">↓</span>Stock IN</div>
-    <div class="ni" onclick="go('stockout')"  id="ni-stockout"><span class="ic">↑</span>Stock OUT</div>
-    <div class="ni" onclick="go('current')"   id="ni-current" ><span class="ic">◈</span>Current Stock <span class="nbadge" id="lowBadge" style="display:none">0</span></div>
-    <div class="ni" onclick="go('setup')"     id="ni-setup"   ><span class="ic">⌗</span>Setup</div>
+    <div class="ni on" onclick="go('products')" id="ni-products"><span class="ic">\u229e</span>Products</div>
+    <div class="ni" onclick="go('stockin')"   id="ni-stockin" ><span class="ic">\u2193</span>Stock IN</div>
+    <div class="ni" onclick="go('stockout')"  id="ni-stockout"><span class="ic">\u2191</span>Stock OUT</div>
+    <div class="ni" onclick="go('current')"   id="ni-current" ><span class="ic">\u25c8</span>Current Stock <span class="nbadge" id="lowBadge" style="display:none">0</span></div>
+    <div class="ni" onclick="go('setup')"     id="ni-setup"   ><span class="ic">\u2317</span>Setup</div>
   </nav>
   <div class="sidebar-foot">
     <div class="conn-row">
@@ -797,20 +279,17 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
     <div class="conn-time" id="sideTime"></div>
   </div>
 </aside>
-
-<!-- MAIN -->
 <main class="main" id="mainArea">
 
-<!-- ═══ PRODUCTS ═══════════════════════════════════════ -->
+<!-- PRODUCTS PAGE -->
 <div class="page on" id="page-products">
   <div class="ph">
-    <div><div class="ph-title">Products</div><div class="ph-sub">Master catalogue — synced with Google Sheets</div></div>
+    <div><div class="ph-title">Products</div><div class="ph-sub">Master catalogue \u2014 synced with Google Sheets</div></div>
     <div class="ph-right">
       <div id="livePill-products"></div>
       <button class="sm prim" onclick="openPF()">+ Add product</button>
     </div>
   </div>
-
   <div class="card" id="pForm" style="display:none">
     <div class="form-title" id="pFormLbl">New product</div>
     <div class="g2">
@@ -828,10 +307,9 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
     </div>
     <div class="sn" id="snProd"></div>
   </div>
-
   <div class="card">
     <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
-      <input style="flex:1;min-width:150px;max-width:280px" placeholder="🔍 Search products…" oninput="filterProd(this.value)">
+      <input style="flex:1;min-width:150px;max-width:280px" placeholder="\ud83d\udd0d Search products\u2026" oninput="filterProd(this.value)">
       <span style="font-size:12px;color:var(--text2)" id="prodCount"></span>
     </div>
     <div class="tw">
@@ -841,14 +319,13 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
   </div>
 </div>
 
-<!-- ═══ STOCK IN ════════════════════════════════════════ -->
+<!-- STOCK IN PAGE -->
 <div class="page" id="page-stockin">
   <div class="ph">
     <div><div class="ph-title">Stock IN</div><div class="ph-sub">Record incoming inventory</div></div>
     <div class="ph-right"><div id="livePill-stockin"></div></div>
   </div>
   <div id="connBanner-stockin" class="conn-banner" style="display:none"></div>
-
   <div class="tcol">
     <div>
       <div class="card">
@@ -864,9 +341,9 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
         </div>
         <div class="fg"><label>Product</label>
           <div class="prod-pick-wrap">
-            <div class="prod-pick-disp" id="inCodeDisp">— Select product —</div>
+            <div class="prod-pick-disp" id="inCodeDisp">\u2014 Select product \u2014</div>
             <button class="prod-pick-btn" onclick="openPicker('in')">
-              <span style="font-size:15px">⊞</span> Select
+              <span style="font-size:15px">\u229e</span> Select
             </button>
           </div>
           <input type="hidden" id="inCode">
@@ -882,7 +359,7 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
         </div>
         <div class="fg"><label>Total value</label><input id="inTotal" readonly class="hi"></div>
         <div class="brow">
-          <button class="prim" onclick="postIN()" id="btnIN">✓ Post Stock IN</button>
+          <button class="prim" onclick="postIN()" id="btnIN">\u2713 Post Stock IN</button>
           <button onclick="clearIN()">Clear</button>
         </div>
         <div class="sn" id="snIN"></div>
@@ -890,11 +367,11 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
     </div>
     <div class="card">
       <div class="tw-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
-        <input id="inSearch" class="search-bar" placeholder="🔍 Search product…" oninput="filterIN(this.value)" autocomplete="off">
+        <input id="inSearch" class="search-bar" placeholder="\ud83d\udd0d Search product\u2026" oninput="filterIN(this.value)" autocomplete="off">
       </div>
       <div id="inEditBar" style="display:none;padding:10px 12px;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:var(--r8);margin-bottom:10px;font-size:12px;color:var(--amber);display:none;align-items:center;gap:10px">
-        <span>✎ Editing entry — make changes above then click <strong>Update</strong></span>
-        <button class="sm" onclick="cancelEditIN()" style="margin-left:auto;color:var(--text2)">✕ Cancel edit</button>
+        <span>\u270e Editing entry \u2014 make changes above then click <strong>Update</strong></span>
+        <button class="sm" onclick="cancelEditIN()" style="margin-left:auto;color:var(--text2)">\u2715 Cancel edit</button>
       </div>
       <div class="tw">
         <table><thead><tr><th>Entry</th><th>Date</th><th>Code</th><th>Product</th><th>Supplier</th><th>Qty</th><th>Total (Rs.)</th><th style="width:100px"></th></tr></thead>
@@ -904,14 +381,13 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
   </div>
 </div>
 
-<!-- ═══ STOCK OUT ═══════════════════════════════════════ -->
+<!-- STOCK OUT PAGE -->
 <div class="page" id="page-stockout">
   <div class="ph">
     <div><div class="ph-title">Stock OUT</div><div class="ph-sub">Record outgoing inventory</div></div>
     <div class="ph-right"><div id="livePill-stockout"></div></div>
   </div>
   <div id="connBanner-stockout" class="conn-banner" style="display:none"></div>
-
   <div class="tcol">
     <div>
       <div class="card">
@@ -927,9 +403,9 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
         </div>
         <div class="fg"><label>Product</label>
           <div class="prod-pick-wrap">
-            <div class="prod-pick-disp" id="outCodeDisp">— Select product —</div>
+            <div class="prod-pick-disp" id="outCodeDisp">\u2014 Select product \u2014</div>
             <button class="prod-pick-btn" onclick="openPicker('out')">
-              <span style="font-size:15px">⊞</span> Select
+              <span style="font-size:15px">\u229e</span> Select
             </button>
           </div>
           <input type="hidden" id="outCode">
@@ -947,7 +423,7 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
           <input id="outTotal" readonly class="hi" style="color:var(--red)!important;background:var(--red-bg)!important;border-color:var(--red-bd)!important">
         </div>
         <div class="brow">
-          <button class="danger" onclick="postOUT()" id="btnOUT">✓ Post Stock OUT</button>
+          <button class="danger" onclick="postOUT()" id="btnOUT">\u2713 Post Stock OUT</button>
           <button onclick="clearOUT()">Clear</button>
         </div>
         <div class="sn" id="snOUT"></div>
@@ -955,11 +431,11 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
     </div>
     <div class="card">
       <div class="tw-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
-        <input id="outSearch" class="search-bar" placeholder="🔍 Search product…" oninput="filterOUT(this.value)" autocomplete="off">
+        <input id="outSearch" class="search-bar" placeholder="\ud83d\udd0d Search product\u2026" oninput="filterOUT(this.value)" autocomplete="off">
       </div>
       <div id="outEditBar" style="display:none;padding:10px 12px;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:var(--r8);margin-bottom:10px;font-size:12px;color:var(--amber);align-items:center;gap:10px">
-        <span>✎ Editing entry — make changes above then click <strong>Update</strong></span>
-        <button class="sm" onclick="cancelEditOUT()" style="margin-left:auto;color:var(--text2)">✕ Cancel edit</button>
+        <span>\u270e Editing entry \u2014 make changes above then click <strong>Update</strong></span>
+        <button class="sm" onclick="cancelEditOUT()" style="margin-left:auto;color:var(--text2)">\u2715 Cancel edit</button>
       </div>
       <div class="tw">
         <table><thead><tr><th>Entry</th><th>Date</th><th>Code</th><th>Product</th><th>Issued to</th><th>Qty</th><th>Total (Rs.)</th><th style="width:100px"></th></tr></thead>
@@ -969,22 +445,26 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
   </div>
 </div>
 
-<!-- ═══ CURRENT STOCK ════════════════════════════════════ -->
+<!-- CURRENT STOCK PAGE -->
 <div class="page" id="page-current">
   <div class="ph">
-    <div><div class="ph-title">Current Stock</div><div class="ph-sub">Live inventory — auto-refreshes every 5 seconds</div></div>
+    <div><div class="ph-title">Current Stock</div><div class="ph-sub">Live inventory \u2014 auto-refreshes every 5 seconds</div></div>
     <div class="ph-right">
       <div id="livePill-current"></div>
-      <button class="sm" onclick="syncNow()">↻ Sync now</button>
+      <button class="sm" onclick="syncNow()">\u21bb Sync now</button>
     </div>
   </div>
   <div class="metrics">
-    <div class="metric"><div class="ml">Products</div><div class="mv" id="mTotal">—</div><div class="md">In catalogue</div></div>
-    <div class="metric"><div class="ml">Total IN</div><div class="mv" id="mIn" style="color:var(--green)">—</div><div class="md">All time</div></div>
-    <div class="metric"><div class="ml">Total OUT</div><div class="mv" id="mOut" style="color:var(--amber)">—</div><div class="md">All time</div></div>
-    <div class="metric"><div class="ml">Alerts</div><div class="mv" id="mLow" style="color:var(--red)">—</div><div class="md">Low / out of stock</div></div>
+    <div class="metric"><div class="ml">Products</div><div class="mv" id="mTotal">\u2014</div><div class="md">In catalogue</div></div>
+    <div class="metric"><div class="ml">Total IN</div><div class="mv" id="mIn" style="color:var(--green)">\u2014</div><div class="md">All time</div></div>
+    <div class="metric"><div class="ml">Total OUT</div><div class="mv" id="mOut" style="color:var(--amber)">\u2014</div><div class="md">All time</div></div>
+    <div class="metric"><div class="ml">Alerts</div><div class="mv" id="mLow" style="color:var(--red)">\u2014</div><div class="md">Low / out of stock</div></div>
   </div>
   <div class="card">
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
+      <input style="flex:1;min-width:150px;max-width:280px" placeholder="\ud83d\udd0d Search stock\u2026" id="curSearch" oninput="filterCur(this.value)" autocomplete="off">
+      <span style="font-size:12px;color:var(--text2)" id="curCount"></span>
+    </div>
     <div class="tw">
       <table><thead><tr><th>Code</th><th>Product</th><th>Unit</th><th>Total IN</th><th>Total OUT</th><th>Current</th><th>Reorder</th><th>Status</th></tr></thead>
       <tbody id="curTb"></tbody></table>
@@ -992,41 +472,37 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
   </div>
 </div>
 
-<!-- ═══ SETUP ════════════════════════════════════════════ -->
+<!-- SETUP PAGE -->
 <div class="page" id="page-setup">
   <div class="ph">
-    <div><div class="ph-title">Google Sheets Setup</div><div class="ph-sub">Connect once — always live for all users</div></div>
+    <div><div class="ph-title">Google Sheets Setup</div><div class="ph-sub">Connect once \u2014 always live for all users</div></div>
   </div>
-
   <div class="card setup-card">
     <div class="form-title">Web App URL</div>
     <div class="fg">
       <label>Paste your Apps Script deployment URL</label>
-      <input id="mainUrl" placeholder="https://script.google.com/macros/s/…/exec" oninput="setUrl(this.value)" autocomplete="off">
+      <input id="mainUrl" placeholder="https://script.google.com/macros/s/\u2026/exec" oninput="setUrl(this.value)" autocomplete="off">
     </div>
     <div class="brow">
-      <button class="prim" onclick="testAndConnect()">⚡ Connect</button>
-      <button onclick="forcePull()">↻ Force pull all data</button>
-      <button onclick="clearUrl()" style="color:var(--red)">✕ Disconnect</button>
+      <button class="prim" onclick="testAndConnect()">\u26a1 Connect</button>
+      <button onclick="forcePull()">\u21bb Force pull all data</button>
+      <button onclick="clearUrl()" style="color:var(--red)">\u2715 Disconnect</button>
     </div>
     <div id="connResult" style="font-size:12px;margin-top:10px;font-family:var(--fm);word-break:break-all;color:var(--text2)"></div>
-
     <div style="margin-top:16px;padding:12px 14px;background:var(--green-bg);border:1px solid var(--green-bd);border-radius:var(--r8);font-size:12px;color:var(--green);line-height:1.6">
-      ✅ <strong>Always-live sync:</strong> Once connected, the app polls Google Sheets every <strong>5 seconds</strong>. Any change made from any device (phone, desktop, tablet) appears for everyone automatically. Google Sheets is the single source of truth — no local database.
+      \u2705 <strong>Always-live sync:</strong> Once connected, the app polls Google Sheets every <strong>5 seconds</strong>. Any change made from any device (phone, desktop, tablet) appears for everyone automatically. Google Sheets is the single source of truth \u2014 no local database.
     </div>
-
     <hr style="border:none;border-top:1px solid var(--border);margin:20px 0">
-    <div class="form-title">Step 1 — Create these sheet tabs in your Google Spreadsheet</div>
+    <div class="form-title">Step 1 \u2014 Create these sheet tabs in your Google Spreadsheet</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px">
       <span class="chip">Products</span>
       <span class="chip">Stock IN</span>
       <span class="chip">Stock OUT</span>
     </div>
-
-    <div class="form-title">Step 2 — Paste this Apps Script</div>
+    <div class="form-title">Step 2 \u2014 Paste this Apps Script</div>
     <p style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5">
-      In Google Sheets → <strong>Extensions → Apps Script</strong> → clear existing code → paste below → click <strong>Deploy → New deployment → Web app</strong><br>
-      Execute as: <strong>Me</strong> &nbsp;|&nbsp; Access: <strong>Anyone</strong> → Deploy → copy the URL
+      In Google Sheets \u2192 <strong>Extensions \u2192 Apps Script</strong> \u2192 clear existing code \u2192 paste below \u2192 click <strong>Deploy \u2192 New deployment \u2192 Web app</strong><br>
+      Execute as: <strong>Me</strong> &nbsp;|&nbsp; Access: <strong>Anyone</strong> \u2192 Deploy \u2192 copy the URL
     </p>
     <pre id="scriptEl">function doPost(e) {
   try {
@@ -1036,7 +512,6 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
                ss.insertSheet(data.sheet);
 
     if (data.action === 'replace') {
-      // Full replace — for product saves / deletes
       var last = sh.getLastRow();
       if (last > 1) sh.deleteRows(2, last - 1);
       if (data.header && sh.getLastRow() === 0) {
@@ -1048,9 +523,7 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
         sh.getRange(2, 1, data.rows.length, data.rows[0].length)
           .setValues(data.rows);
       }
-
     } else if (data.action === 'deleteRow') {
-      // Delete a single row by entry number (column A)
       var vals = sh.getRange(1, 1, sh.getLastRow(), 1).getValues();
       for (var i = vals.length - 1; i >= 1; i--) {
         if (String(vals[i][0]) === String(data.entryNo)) {
@@ -1058,9 +531,7 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
           break;
         }
       }
-
     } else {
-      // Append single row — for Stock IN / OUT
       if (sh.getLastRow() === 0 && data.header) {
         sh.appendRow(data.header);
       }
@@ -1134,24 +605,24 @@ function ok_(obj) {
     .setMimeType(ContentService.MimeType.JSON);
 }</pre>
     <div style="display:flex;gap:8px;margin-top:10px">
-      <button class="sm" onclick="copyScript()">📋 Copy script</button>
+      <button class="sm" onclick="copyScript()">\ud83d\udccb Copy script</button>
     </div>
   </div>
 </div>
 
 </main>
-</div><!-- /.app -->
-</div><!-- /.app-shell -->
+</div>
+</div>
 
 <!-- PRODUCT PICKER MODAL -->
 <div class="ppModal" id="ppModal" onclick="ppBackdropClose(event)">
   <div class="ppBox" id="ppBox">
     <div class="ppHead">
       <div class="ppTitle">Select Product</div>
-      <button class="ppClose" onclick="closePicker()">✕</button>
+      <button class="ppClose" onclick="closePicker()">\u2715</button>
     </div>
     <div class="ppSearch">
-      <input id="ppSearchInput" placeholder="🔍 Search by code or name…" oninput="ppFilter(this.value)" autocomplete="off">
+      <input id="ppSearchInput" placeholder="\ud83d\udd0d Search by code or name\u2026" oninput="ppFilter(this.value)" autocomplete="off">
     </div>
     <div class="ppList" id="ppList"></div>
   </div>
@@ -1160,27 +631,20 @@ function ok_(obj) {
 <!-- MOBILE BOTTOM NAV -->
 <nav class="bnav">
   <div class="bnav-inner">
-    <div class="bni on" onclick="go('products')" id="bni-products"><span class="bic">⊞</span><span>Products</span></div>
-    <div class="bni"    onclick="go('stockin')"  id="bni-stockin" ><span class="bic">↓</span><span>IN</span></div>
-    <div class="bni"    onclick="go('stockout')" id="bni-stockout"><span class="bic">↑</span><span>OUT</span></div>
+    <div class="bni on" onclick="go('products')" id="bni-products"><span class="bic">\u229e</span><span>Products</span></div>
+    <div class="bni"    onclick="go('stockin')"  id="bni-stockin" ><span class="bic">\u2193</span><span>IN</span></div>
+    <div class="bni"    onclick="go('stockout')" id="bni-stockout"><span class="bic">\u2191</span><span>OUT</span></div>
     <div class="bni"    onclick="go('current')"  id="bni-current" >
-      <span class="bic">◈</span><span>Stock</span>
+      <span class="bic">\u25c8</span><span>Stock</span>
       <span class="bni-badge" id="lowBadgeM" style="display:none">0</span>
     </div>
-    <div class="bni"    onclick="go('setup')"    id="bni-setup"   ><span class="bic">⌗</span><span>Setup</span></div>
+    <div class="bni"    onclick="go('setup')"    id="bni-setup"   ><span class="bic">\u2317</span><span>Setup</span></div>
   </div>
 </nav>
 
 <div class="toast" id="toast"></div>
 
-<!-- ══════════════════════════════════════════════════════
-     JAVASCRIPT
-══════════════════════════════════════════════════════ -->
 <script>
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  STATE — Google Sheets is the ONLY database
-//  Local vars are just an in-memory render cache
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 let CACHE = { products:[], stockIn:[], stockOut:[] };
 const DEFAULT_URL = 'https://script.google.com/macros/s/AKfycbz8T_7JktZYtlgAYhB5gk4bOSx1abYjsDOZkS3pxlzcJmcarZc8OpfWVRkt6WpE4FAUkA/exec';
 let gsUrl = '';
@@ -1191,15 +655,13 @@ let connected = false;
 let lastPull = null;
 let pulling  = false;
 let pushing  = false;
-const POLL_MS = 5000; // always-live: 5-second refresh
-let editINNo  = null; // entry No being edited in Stock IN form
-let editOUTNo = null; // entry No being edited in Stock OUT form
-let inFilter  = '';   // search filter for IN table
-let outFilter = '';   // search filter for OUT table
+const POLL_MS = 5000;
+let editINNo  = null;
+let editOUTNo = null;
+let inFilter  = '';
+let outFilter = '';
+let curFilter = '';
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  INIT
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function init() {
   gsUrl = localStorage.getItem('gsUrl') || DEFAULT_URL;
   if (!localStorage.getItem('gsUrl')) localStorage.setItem('gsUrl', DEFAULT_URL);
@@ -1207,10 +669,9 @@ function init() {
   const ds = d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
   document.getElementById('inDate').textContent = ds;
   document.getElementById('outDate').textContent = ds;
-
   if (gsUrl) {
     document.getElementById('mainUrl').value = gsUrl;
-    showOverlay('Connecting to Google Sheets…');
+    showOverlay('Connecting to Google Sheets\u2026');
     pull(true).then(() => hideOverlay());
     startPoll();
   } else {
@@ -1219,82 +680,47 @@ function init() {
   }
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  POLLING — every 5s = always live
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function startPoll() {
-  stopPoll();
-  pollTimer = setInterval(() => pull(false, true), POLL_MS);
-}
-function stopPoll() {
-  if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
-}
+function startPoll() { stopPoll(); pollTimer = setInterval(() => pull(false, true), POLL_MS); }
+function stopPoll() { if (pollTimer) { clearInterval(pollTimer); pollTimer = null; } }
+async function syncNow() { await pull(true); }
+async function forcePull() { showOverlay('Pulling all data from Google Sheets\u2026'); await pull(true); hideOverlay(); }
 
-async function syncNow() {
-  await pull(true);
-}
-async function forcePull() {
-  showOverlay('Pulling all data from Google Sheets…');
-  await pull(true);
-  hideOverlay();
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  PULL — read from Google Sheets (doGet)
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 async function pull(showMsg, silent) {
   if (!gsUrl || pulling) return;
   pulling = true;
   if (!silent) setDots('syncing');
   try {
-    const r = await fetch(gsUrl + '?t=' + Date.now(), {
-      method: 'GET',
-      cache: 'no-store'
-    });
+    const r = await fetch(gsUrl + '?t=' + Date.now(), { method: 'GET', cache: 'no-store' });
     if (!r.ok) throw new Error('HTTP ' + r.status);
     const d = await r.json();
-
     if (d.status === 'error') throw new Error(d.msg);
-
     let changed = false;
     if (Array.isArray(d.products))  { CACHE.products = d.products;  changed = true; }
     if (Array.isArray(d.stockIn))   { CACHE.stockIn  = d.stockIn;   changed = true; }
     if (Array.isArray(d.stockOut))  { CACHE.stockOut = d.stockOut;  changed = true; }
-
     if (changed) renderAll(true);
-    connected = true;
-    lastPull  = new Date();
-    setDots(true);
-    if (showMsg) toast('✓ Synced with Google Sheets', 'ok');
+    connected = true; lastPull = new Date(); setDots(true);
+    if (showMsg) toast('\u2713 Synced with Google Sheets', 'ok');
   } catch(err) {
-    connected = false;
-    setDots(false);
-    if (showMsg) toast('Sync failed — ' + err.message, 'fail');
+    connected = false; setDots(false);
+    if (showMsg) toast('Sync failed \u2014 ' + err.message, 'fail');
     console.warn('Pull error:', err);
   }
   pulling = false;
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  PUSH — write to Google Sheets (doPost)
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 async function push(payload, snId) {
-  setSN(snId, 'syncing', '↑ Saving to Google Sheets…');
+  setSN(snId, 'syncing', '\u2191 Saving to Google Sheets\u2026');
   try {
-    const r = await fetch(gsUrl, {
-      method: 'POST',
-      headers: {'Content-Type':'text/plain'},
-      body: JSON.stringify(payload)
-    });
+    const r = await fetch(gsUrl, { method: 'POST', headers: {'Content-Type':'text/plain'}, body: JSON.stringify(payload) });
     const d = await r.json();
     if (d.status === 'error') throw new Error(d.msg);
-    setSN(snId, 'done', '✓ Saved to Google Sheets');
+    setSN(snId, 'done', '\u2713 Saved to Google Sheets');
     setTimeout(() => setSN(snId, null), 2500);
-    // Immediately pull to confirm + get server state
     await pull(false);
     return true;
   } catch(err) {
-    setSN(snId, 'fail', '✗ Save failed: ' + err.message);
+    setSN(snId, 'fail', '\u2717 Save failed: ' + err.message);
     setTimeout(() => setSN(snId, null), 4000);
     return false;
   }
@@ -1308,21 +734,11 @@ function setSN(id, state, msg) {
   if (msg) el.textContent = msg;
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  URL / CONNECTION MANAGEMENT
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function setUrl(v) {
-  gsUrl = v.trim();
-  localStorage.setItem('gsUrl', gsUrl);
-}
+function setUrl(v) { gsUrl = v.trim(); localStorage.setItem('gsUrl', gsUrl); }
 function clearUrl() {
-  gsUrl = '';
-  localStorage.removeItem('gsUrl');
-  stopPoll();
-  connected = false;
+  gsUrl = ''; localStorage.removeItem('gsUrl'); stopPoll(); connected = false;
   CACHE = { products:[], stockIn:[], stockOut:[] };
-  setDots(false);
-  renderAll(false);
+  setDots(false); renderAll(false);
   document.getElementById('mainUrl').value = '';
   document.getElementById('connResult').textContent = '';
   toast('Disconnected', 'warn');
@@ -1330,112 +746,76 @@ function clearUrl() {
 async function testAndConnect() {
   const val = document.getElementById('mainUrl').value.trim();
   if (!val) { toast('Enter a URL first', 'warn'); return; }
-  gsUrl = val;
-  localStorage.setItem('gsUrl', gsUrl);
-  document.getElementById('connResult').textContent = 'Testing…';
-  showOverlay('Connecting to Google Sheets…');
+  gsUrl = val; localStorage.setItem('gsUrl', gsUrl);
+  document.getElementById('connResult').textContent = 'Testing\u2026';
+  showOverlay('Connecting to Google Sheets\u2026');
   try {
     const r = await fetch(gsUrl + '?t=' + Date.now(), { cache:'no-store' });
     const d = await r.json();
     if (d.status === 'error') throw new Error(d.msg);
-    connected = true;
-    setDots(true);
-    document.getElementById('connResult').textContent = '✓ Connected — ' + JSON.stringify(d).slice(0,100);
+    connected = true; setDots(true);
+    document.getElementById('connResult').textContent = '\u2713 Connected \u2014 ' + JSON.stringify(d).slice(0,100);
     if (Array.isArray(d.products)) CACHE.products = d.products;
     if (Array.isArray(d.stockIn))  CACHE.stockIn  = d.stockIn;
     if (Array.isArray(d.stockOut)) CACHE.stockOut = d.stockOut;
-    renderAll(true);
-    startPoll();
-    toast('✓ Connected! Live sync active (every 5s)', 'ok');
+    renderAll(true); startPoll();
+    toast('\u2713 Connected! Live sync active (every 5s)', 'ok');
   } catch(err) {
-    connected = false;
-    setDots(false);
-    document.getElementById('connResult').textContent = '✗ ' + err.message;
+    connected = false; setDots(false);
+    document.getElementById('connResult').textContent = '\u2717 ' + err.message;
     toast('Connection failed', 'fail');
   }
   hideOverlay();
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  DOT / STATUS INDICATORS
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function setDots(state) {
-  // state: true=live, false=off, 'syncing'=syncing
   const cls = state === true ? 'dot live' : state === 'syncing' ? 'dot syncing' : 'dot err';
-  ['sideDot','topDot'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.className = cls;
-  });
-  const lbl = state === true ? 'Live' : state === 'syncing' ? 'Syncing…' : 'Not connected';
-  const el = document.getElementById('sideLabel');
-  if (el) el.textContent = lbl;
-  const tl = document.getElementById('topLabel');
-  if (tl) tl.textContent = lbl;
+  ['sideDot','topDot'].forEach(id => { const el = document.getElementById(id); if (el) el.className = cls; });
+  const lbl = state === true ? 'Live' : state === 'syncing' ? 'Syncing\u2026' : 'Not connected';
+  const el = document.getElementById('sideLabel'); if (el) el.textContent = lbl;
+  const tl = document.getElementById('topLabel'); if (tl) tl.textContent = lbl;
   if (state === true && lastPull) {
     const t = document.getElementById('sideTime');
     if (t) t.textContent = 'Updated ' + lastPull.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
   }
-  // Live pills on each page
   const pillHtml = state === true
-    ? '<div class="live-pill"><span class="live-dot"></span>Live — refreshes every 5s</div>'
-    : '<div class="offline-pill">⚠ Not connected</div>';
+    ? '<div class="live-pill"><span class="live-dot"></span>Live \u2014 refreshes every 5s</div>'
+    : '<div class="offline-pill">\u26a0 Not connected</div>';
   ['livePill-products','livePill-stockin','livePill-stockout','livePill-current'].forEach(id => {
-    const p = document.getElementById(id);
-    if (p) p.innerHTML = pillHtml;
+    const p = document.getElementById(id); if (p) p.innerHTML = pillHtml;
   });
-  // Connection banners on Stock IN/OUT pages
   const bannerHtml = state === true
-    ? `<div class="cb-left cb-live">✓ Google Sheets connected — all entries sync instantly</div>`
-    : `<div class="cb-left cb-off">⚠ Not connected — <a href="#" onclick="go('setup');return false" style="color:inherit">Go to Setup to connect</a></div>`;
+    ? '<div class="cb-left cb-live">\u2713 Google Sheets connected \u2014 all entries sync instantly</div>'
+    : '<div class="cb-left cb-off">\u26a0 Not connected \u2014 <a href="#" onclick="go(\'setup\');return false" style="color:inherit">Go to Setup to connect</a></div>';
   ['connBanner-stockin','connBanner-stockout'].forEach(id => {
     const b = document.getElementById(id);
     if (b) { b.innerHTML = bannerHtml; b.style.display = 'flex'; b.className = 'conn-banner ' + (state===true?'cb-live':'cb-off'); }
   });
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  NAVIGATION
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const ORDER = ['products','stockin','stockout','current','setup'];
 function go(n) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.ni').forEach(x=>x.classList.remove('on'));
   document.querySelectorAll('.bni').forEach(x=>x.classList.remove('on'));
   document.getElementById('page-'+n).classList.add('on');
-  const ni = document.getElementById('ni-'+n);
-  if (ni) ni.classList.add('on');
-  const bni = document.getElementById('bni-'+n);
-  if (bni) bni.classList.add('on');
+  const ni = document.getElementById('ni-'+n); if (ni) ni.classList.add('on');
+  const bni = document.getElementById('bni-'+n); if (bni) bni.classList.add('on');
   window.scrollTo(0,0);
-  // Trigger immediate pull when switching pages
   if (gsUrl) pull(false);
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  RENDER ALL
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function renderAll(fromSheets) {
-  renderProds();
-  populateSels();
-  renderInTb();
-  renderOutTb();
-  renderCurrent();
-  updateNos();
+  renderProds(); populateSels(); renderInTb(); renderOutTb(); renderCurrent(); updateNos();
   if (fromSheets && lastPull) {
     const t = document.getElementById('sideTime');
     if (t) t.textContent = 'Updated ' + lastPull.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
   }
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  PRODUCTS
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function populateSels() {
-  // hidden inputs — no options needed; picker modal renders from CACHE.products
-}
+function populateSels() {}
 
-// ── PRODUCT PICKER ─────────────────────────────────
-let _ppTarget = null; // 'in' or 'out'
+let _ppTarget = null;
 function openPicker(target) {
   _ppTarget = target;
   document.getElementById('ppSearchInput').value = '';
@@ -1444,26 +824,14 @@ function openPicker(target) {
   modal.classList.add('open');
   setTimeout(() => document.getElementById('ppSearchInput').focus(), 80);
 }
-function closePicker() {
-  document.getElementById('ppModal').classList.remove('open');
-  _ppTarget = null;
-}
-function ppBackdropClose(e) {
-  if (e.target === document.getElementById('ppModal')) closePicker();
-}
+function closePicker() { document.getElementById('ppModal').classList.remove('open'); _ppTarget = null; }
+function ppBackdropClose(e) { if (e.target === document.getElementById('ppModal')) closePicker(); }
 function ppFilter(q) {
   const term = q.toLowerCase();
-  const products = CACHE.products.filter(p =>
-    !term || p.code.toLowerCase().includes(term) || p.name.toLowerCase().includes(term)
-  );
-  const currentCode = _ppTarget === 'in'
-    ? document.getElementById('inCode').value
-    : document.getElementById('outCode').value;
+  const products = CACHE.products.filter(p => !term || p.code.toLowerCase().includes(term) || p.name.toLowerCase().includes(term));
+  const currentCode = _ppTarget === 'in' ? document.getElementById('inCode').value : document.getElementById('outCode').value;
   const list = document.getElementById('ppList');
-  if (products.length === 0) {
-    list.innerHTML = '<div class="ppEmpty">No products found</div>';
-    return;
-  }
+  if (products.length === 0) { list.innerHTML = '<div class="ppEmpty">No products found</div>'; return; }
   list.innerHTML = products.map(p => `
     <div class="ppItem${p.code === currentCode ? ' active' : ''}" onclick="ppSelect('${p.code}')">
       <span class="ppCode">${p.code}</span>
@@ -1476,21 +844,20 @@ function ppSelect(code) {
   if (!p) return;
   if (_ppTarget === 'in') {
     document.getElementById('inCode').value = code;
-    document.getElementById('inCodeDisp').textContent = p.code + ' · ' + p.name;
+    document.getElementById('inCodeDisp').textContent = p.code + ' \u00b7 ' + p.name;
     document.getElementById('inCodeDisp').classList.add('chosen');
     fillIn();
   } else {
     document.getElementById('outCode').value = code;
-    document.getElementById('outCodeDisp').textContent = p.code + ' · ' + p.name;
+    document.getElementById('outCodeDisp').textContent = p.code + ' \u00b7 ' + p.name;
     document.getElementById('outCodeDisp').classList.add('chosen');
     fillOut();
   }
   closePicker();
 }
+
 function renderProds() {
-  const data = CACHE.products.filter(p =>
-    !prodFilter || p.code.toLowerCase().includes(prodFilter) || p.name.toLowerCase().includes(prodFilter)
-  );
+  const data = CACHE.products.filter(p => !prodFilter || p.code.toLowerCase().includes(prodFilter) || p.name.toLowerCase().includes(prodFilter));
   document.getElementById('prodCount').textContent = data.length + ' products';
   document.getElementById('prodTb').innerHTML = data.length === 0
     ? '<tr><td colspan="6" style="text-align:center;color:var(--text3);padding:24px">' + (gsUrl ? 'No products in Sheets yet' : 'Connect Google Sheets to load products') + '</td></tr>'
@@ -1499,7 +866,7 @@ function renderProds() {
       <td style="font-weight:500">${p.name}</td>
       <td>${p.unit}</td>
       <td class="fm">${p.reorder}</td>
-      <td style="color:var(--text2)">${p.desc||'—'}</td>
+      <td style="color:var(--text2)">${p.desc||'\u2014'}</td>
       <td><button class="sm" style="margin-right:4px" onclick="editProd('${p.code}')">Edit</button><button class="sm" onclick="delProd('${p.code}')">Del</button></td>
     </tr>`).join('');
 }
@@ -1515,8 +882,7 @@ function openPF() {
 }
 function closePF(){ document.getElementById('pForm').style.display='none'; }
 function editProd(code) {
-  const p = CACHE.products.find(x=>x.code===code);
-  if (!p) return;
+  const p = CACHE.products.find(x=>x.code===code); if (!p) return;
   editCode = code;
   document.getElementById('pFormLbl').textContent = 'Edit product';
   document.getElementById('pCode').value=p.code;
@@ -1532,11 +898,7 @@ async function delProd(code) {
   if (!gsUrl) { toast('Not connected to Google Sheets','fail'); return; }
   CACHE.products = CACHE.products.filter(x=>x.code!==code);
   renderAll(false);
-  await push({
-    action:'replace', sheet:'Products',
-    header:['Code','Name','Unit','Reorder Level','Description'],
-    rows: CACHE.products.map(p=>[p.code,p.name,p.unit,p.reorder,p.desc||''])
-  }, 'snProd');
+  await push({ action:'replace', sheet:'Products', header:['Code','Name','Unit','Reorder Level','Description'], rows: CACHE.products.map(p=>[p.code,p.name,p.unit,p.reorder,p.desc||'']) }, 'snProd');
   toast('Product deleted');
 }
 async function saveProd() {
@@ -1545,25 +907,14 @@ async function saveProd() {
   const name = document.getElementById('pName').value.trim();
   if (!code||!name) { toast('Code and name required','warn'); return; }
   if (!editCode && CACHE.products.find(p=>p.code===code)) { toast('Code already exists','warn'); return; }
-  const obj = { code, name,
-    unit: document.getElementById('pUnit').value,
-    reorder: parseInt(document.getElementById('pReorder').value)||0,
-    desc: document.getElementById('pDesc').value.trim()
-  };
+  const obj = { code, name, unit: document.getElementById('pUnit').value, reorder: parseInt(document.getElementById('pReorder').value)||0, desc: document.getElementById('pDesc').value.trim() };
   if (editCode) { const i=CACHE.products.findIndex(x=>x.code===editCode); CACHE.products[i]=obj; }
   else { CACHE.products.push(obj); }
   renderAll(false); closePF();
-  const ok = await push({
-    action:'replace', sheet:'Products',
-    header:['Code','Name','Unit','Reorder Level','Description'],
-    rows: CACHE.products.map(p=>[p.code,p.name,p.unit,p.reorder,p.desc||''])
-  }, 'snProd');
+  const ok = await push({ action:'replace', sheet:'Products', header:['Code','Name','Unit','Reorder Level','Description'], rows: CACHE.products.map(p=>[p.code,p.name,p.unit,p.reorder,p.desc||'']) }, 'snProd');
   if (ok) toast('Product saved to Google Sheets','ok');
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  STOCK IN
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function fillIn(){
   const p=CACHE.products.find(x=>x.code===document.getElementById('inCode').value);
   document.getElementById('inName').value=p?p.name:'';
@@ -1576,8 +927,9 @@ function calcIn(){
 }
 function clearIN(){
   ['inCode','inName','inUnit','inSupp','inQty','inPrice','inTotal'].forEach(id=>{document.getElementById(id).value='';});
-  const d=document.getElementById('inCodeDisp'); d.textContent='— Select product —'; d.classList.remove('chosen');
-}async function postIN(){
+  const d=document.getElementById('inCodeDisp'); d.textContent='\u2014 Select product \u2014'; d.classList.remove('chosen');
+}
+async function postIN(){
   if (!gsUrl) { toast('Not connected to Google Sheets','fail'); return; }
   const code=document.getElementById('inCode').value;
   const qty=parseInt(document.getElementById('inQty').value)||0;
@@ -1586,56 +938,26 @@ function clearIN(){
   const p=CACHE.products.find(x=>x.code===code);
   if (!p){toast('Product not found','warn');return;}
   const price=parseFloat(document.getElementById('inPrice').value)||0;
-
   if (editINNo) {
-    // ── UPDATE MODE ──
     const idx = CACHE.stockIn.findIndex(x => x.no === editINNo);
     if (idx === -1) { toast('Entry not found','fail'); return; }
-    const updated = {
-      no: editINNo,
-      date: CACHE.stockIn[idx].date,
-      code, name:p.name, unit:p.unit,
-      supplier: document.getElementById('inSupp').value||'',
-      qty, price, total: qty*price
-    };
-    setBtn('btnIN', true, 'Updating…');
-    // Delete old row then append updated
+    const updated = { no: editINNo, date: CACHE.stockIn[idx].date, code, name:p.name, unit:p.unit, supplier: document.getElementById('inSupp').value||'', qty, price, total: qty*price };
+    setBtn('btnIN', true, 'Updating\u2026');
     const del = await push({ action:'deleteRow', sheet:'Stock IN', entryNo: editINNo }, null);
     if (del) {
-      const ok = await push({
-        action:'append', sheet:'Stock IN',
-        header:['Entry No','Date','Code','Product','Unit','Supplier','Qty','Unit Price','Total'],
-        row:[updated.no,updated.date,updated.code,updated.name,updated.unit,updated.supplier,updated.qty,updated.price,updated.total]
-      }, 'snIN');
-      setBtn('btnIN', false, '✓ Update Stock IN');
-      if (ok) { cancelEditIN(); toast('✓ '+editINNo+' updated in Stock IN', 'ok'); }
-    } else {
-      setBtn('btnIN', false, '✓ Update Stock IN');
-      toast('Update failed','fail');
-    }
+      const ok = await push({ action:'append', sheet:'Stock IN', header:['Entry No','Date','Code','Product','Unit','Supplier','Qty','Unit Price','Total'], row:[updated.no,updated.date,updated.code,updated.name,updated.unit,updated.supplier,updated.qty,updated.price,updated.total] }, 'snIN');
+      setBtn('btnIN', false, '\u2713 Update Stock IN');
+      if (ok) { cancelEditIN(); toast('\u2713 '+editINNo+' updated in Stock IN', 'ok'); }
+    } else { setBtn('btnIN', false, '\u2713 Update Stock IN'); toast('Update failed','fail'); }
   } else {
-    // ── NEW ENTRY MODE ──
-    const e={
-      no:'IN-'+String(CACHE.stockIn.length+1).padStart(3,'0'),
-      date:new Date().toLocaleDateString('en-GB'),
-      code, name:p.name, unit:p.unit,
-      supplier:document.getElementById('inSupp').value||'',
-      qty, price, total:qty*price
-    };
-    setBtn('btnIN', true, 'Posting…');
-    const ok = await push({
-      action:'append', sheet:'Stock IN',
-      header:['Entry No','Date','Code','Product','Unit','Supplier','Qty','Unit Price','Total'],
-      row:[e.no,e.date,e.code,e.name,e.unit,e.supplier,e.qty,e.price,e.total]
-    }, 'snIN');
-    setBtn('btnIN', false, '✓ Post Stock IN');
-    if (ok) { clearIN(); toast('✓ Stock IN posted: '+e.no, 'ok'); }
+    const e={ no:'IN-'+String(CACHE.stockIn.length+1).padStart(3,'0'), date:new Date().toLocaleDateString('en-GB'), code, name:p.name, unit:p.unit, supplier:document.getElementById('inSupp').value||'', qty, price, total:qty*price };
+    setBtn('btnIN', true, 'Posting\u2026');
+    const ok = await push({ action:'append', sheet:'Stock IN', header:['Entry No','Date','Code','Product','Unit','Supplier','Qty','Unit Price','Total'], row:[e.no,e.date,e.code,e.name,e.unit,e.supplier,e.qty,e.price,e.total] }, 'snIN');
+    setBtn('btnIN', false, '\u2713 Post Stock IN');
+    if (ok) { clearIN(); toast('\u2713 Stock IN posted: '+e.no, 'ok'); }
   }
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  STOCK OUT
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function fillOut(){
   const p=CACHE.products.find(x=>x.code===document.getElementById('outCode').value);
   document.getElementById('outName').value=p?p.name:'';
@@ -1648,125 +970,76 @@ function calcOut(){
 }
 function clearOUT(){
   ['outCode','outName','outUnit','outIssued','outQty','outPrice','outTotal'].forEach(id=>{document.getElementById(id).value='';});
-  const d=document.getElementById('outCodeDisp'); d.textContent='— Select product —'; d.classList.remove('chosen');
-}async function postOUT(){
+  const d=document.getElementById('outCodeDisp'); d.textContent='\u2014 Select product \u2014'; d.classList.remove('chosen');
+}
+async function postOUT(){
   if (!gsUrl) { toast('Not connected to Google Sheets','fail'); return; }
   const code=document.getElementById('outCode').value;
   const qty=parseInt(document.getElementById('outQty').value)||0;
   if (!code){toast('Select a product','warn');return;}
   if (qty<=0){toast('Enter valid qty','warn');return;}
-
   if (editOUTNo) {
-    // ── UPDATE MODE ──
     const idx = CACHE.stockOut.findIndex(x => x.no === editOUTNo);
     if (idx === -1) { toast('Entry not found','fail'); return; }
     const p=CACHE.products.find(x=>x.code===code);
     const price=parseFloat(document.getElementById('outPrice').value)||0;
-    const updated = {
-      no: editOUTNo,
-      date: CACHE.stockOut[idx].date,
-      code, name:p?p.name:code, unit:p?p.unit:'',
-      issued: document.getElementById('outIssued').value||'',
-      qty, price, total: qty*price
-    };
-    setBtn('btnOUT', true, 'Updating…');
+    const updated = { no: editOUTNo, date: CACHE.stockOut[idx].date, code, name:p?p.name:code, unit:p?p.unit:'', issued: document.getElementById('outIssued').value||'', qty, price, total: qty*price };
+    setBtn('btnOUT', true, 'Updating\u2026');
     const del = await push({ action:'deleteRow', sheet:'Stock OUT', entryNo: editOUTNo }, null);
     if (del) {
-      const ok = await push({
-        action:'append', sheet:'Stock OUT',
-        header:['Entry No','Date','Code','Product','Unit','Issued To','Qty','Unit Price','Total'],
-        row:[updated.no,updated.date,updated.code,updated.name,updated.unit,updated.issued,updated.qty,updated.price,updated.total]
-      }, 'snOUT');
-      setBtn('btnOUT', false, '✓ Update Stock OUT');
-      if (ok) { cancelEditOUT(); toast('✓ '+editOUTNo+' updated in Stock OUT', 'ok'); }
-    } else {
-      setBtn('btnOUT', false, '✓ Update Stock OUT');
-      toast('Update failed','fail');
-    }
+      const ok = await push({ action:'append', sheet:'Stock OUT', header:['Entry No','Date','Code','Product','Unit','Issued To','Qty','Unit Price','Total'], row:[updated.no,updated.date,updated.code,updated.name,updated.unit,updated.issued,updated.qty,updated.price,updated.total] }, 'snOUT');
+      setBtn('btnOUT', false, '\u2713 Update Stock OUT');
+      if (ok) { cancelEditOUT(); toast('\u2713 '+editOUTNo+' updated in Stock OUT', 'ok'); }
+    } else { setBtn('btnOUT', false, '\u2713 Update Stock OUT'); toast('Update failed','fail'); }
   } else {
-    // ── NEW ENTRY MODE ──
-    const cur=CACHE.stockIn.filter(x=>x.code===code).reduce((a,b)=>a+b.qty,0)-
-              CACHE.stockOut.filter(x=>x.code===code).reduce((a,b)=>a+b.qty,0);
+    const cur=CACHE.stockIn.filter(x=>x.code===code).reduce((a,b)=>a+b.qty,0)-CACHE.stockOut.filter(x=>x.code===code).reduce((a,b)=>a+b.qty,0);
     if (qty>cur){toast('Insufficient stock ('+cur+' available)','warn');return;}
     const p=CACHE.products.find(x=>x.code===code);
     const price=parseFloat(document.getElementById('outPrice').value)||0;
-    const e={
-      no:'OUT-'+String(CACHE.stockOut.length+1).padStart(3,'0'),
-      date:new Date().toLocaleDateString('en-GB'),
-      code, name:p.name, unit:p.unit,
-      issued:document.getElementById('outIssued').value||'',
-      qty, price, total:qty*price
-    };
-    setBtn('btnOUT', true, 'Posting…');
-    const ok = await push({
-      action:'append', sheet:'Stock OUT',
-      header:['Entry No','Date','Code','Product','Unit','Issued To','Qty','Unit Price','Total'],
-      row:[e.no,e.date,e.code,e.name,e.unit,e.issued,e.qty,e.price,e.total]
-    }, 'snOUT');
-    setBtn('btnOUT', false, '✓ Post Stock OUT');
-    if (ok) { clearOUT(); toast('✓ Stock OUT posted: '+e.no, 'ok'); }
+    const e={ no:'OUT-'+String(CACHE.stockOut.length+1).padStart(3,'0'), date:new Date().toLocaleDateString('en-GB'), code, name:p.name, unit:p.unit, issued:document.getElementById('outIssued').value||'', qty, price, total:qty*price };
+    setBtn('btnOUT', true, 'Posting\u2026');
+    const ok = await push({ action:'append', sheet:'Stock OUT', header:['Entry No','Date','Code','Product','Unit','Issued To','Qty','Unit Price','Total'], row:[e.no,e.date,e.code,e.name,e.unit,e.issued,e.qty,e.price,e.total] }, 'snOUT');
+    setBtn('btnOUT', false, '\u2713 Post Stock OUT');
+    if (ok) { clearOUT(); toast('\u2713 Stock OUT posted: '+e.no, 'ok'); }
   }
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  SEARCH FILTERS
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function filterIN(v){ inFilter = v.trim(); renderInTb(); }
 function filterOUT(v){ outFilter = v.trim(); renderOutTb(); }
+function filterCur(v){ curFilter = v.trim().toLowerCase(); renderCurrent(); }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  EDIT IN
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function editIN(no) {
-  const e = CACHE.stockIn.find(x => x.no === no);
-  if (!e) return;
+  const e = CACHE.stockIn.find(x => x.no === no); if (!e) return;
   editINNo = no;
-  // Fill form with entry data
   document.getElementById('inCode').value = e.code;
-  const disp = document.getElementById('inCodeDisp');
-  disp.textContent = e.code + ' · ' + e.name;
-  disp.classList.add('chosen');
+  const disp = document.getElementById('inCodeDisp'); disp.textContent = e.code + ' \u00b7 ' + e.name; disp.classList.add('chosen');
   document.getElementById('inName').value = e.name;
   document.getElementById('inUnit').value = e.unit;
   document.getElementById('inSupp').value = e.supplier || '';
   document.getElementById('inQty').value = e.qty;
   document.getElementById('inPrice').value = e.price;
   calcIn();
-  // Update form UI into edit mode
   document.getElementById('inNo').textContent = no;
-  document.getElementById('btnIN').textContent = '✓ Update Stock IN';
+  document.getElementById('btnIN').textContent = '\u2713 Update Stock IN';
   document.getElementById('btnIN').classList.remove('prim');
   document.getElementById('btnIN').style.cssText = 'background:var(--amber-bg);color:var(--amber);border-color:var(--amber-bd)';
-  const bar = document.getElementById('inEditBar');
-  bar.style.display = 'flex';
+  const bar = document.getElementById('inEditBar'); bar.style.display = 'flex';
   renderInTb();
-  // Scroll to form
   document.querySelector('#page-stockin .card').scrollIntoView({behavior:'smooth', block:'start'});
-  toast('Editing ' + no + ' — make changes and click Update', 'warn');
+  toast('Editing ' + no + ' \u2014 make changes and click Update', 'warn');
 }
 function cancelEditIN() {
-  editINNo = null;
-  clearIN();
-  updateNos();
-  const btn = document.getElementById('btnIN');
-  btn.textContent = '✓ Post Stock IN';
-  btn.classList.add('prim');
-  btn.style.cssText = '';
+  editINNo = null; clearIN(); updateNos();
+  const btn = document.getElementById('btnIN'); btn.textContent = '\u2713 Post Stock IN'; btn.classList.add('prim'); btn.style.cssText = '';
   document.getElementById('inEditBar').style.display = 'none';
   renderInTb();
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  EDIT OUT
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function editOUT(no) {
-  const e = CACHE.stockOut.find(x => x.no === no);
-  if (!e) return;
+  const e = CACHE.stockOut.find(x => x.no === no); if (!e) return;
   editOUTNo = no;
   document.getElementById('outCode').value = e.code;
-  const disp = document.getElementById('outCodeDisp');
-  disp.textContent = e.code + ' · ' + e.name;
-  disp.classList.add('chosen');
+  const disp = document.getElementById('outCodeDisp'); disp.textContent = e.code + ' \u00b7 ' + e.name; disp.classList.add('chosen');
   document.getElementById('outName').value = e.name;
   document.getElementById('outUnit').value = e.unit;
   document.getElementById('outIssued').value = e.issued || '';
@@ -1774,24 +1047,15 @@ function editOUT(no) {
   document.getElementById('outPrice').value = e.price;
   calcOut();
   document.getElementById('outNo').textContent = no;
-  const btn = document.getElementById('btnOUT');
-  btn.textContent = '✓ Update Stock OUT';
-  btn.className = 'danger';
-  btn.style.cssText = 'background:var(--amber-bg);color:var(--amber);border-color:var(--amber-bd)';
-  const bar = document.getElementById('outEditBar');
-  bar.style.display = 'flex';
+  const btn = document.getElementById('btnOUT'); btn.textContent = '\u2713 Update Stock OUT'; btn.className = 'danger'; btn.style.cssText = 'background:var(--amber-bg);color:var(--amber);border-color:var(--amber-bd)';
+  const bar = document.getElementById('outEditBar'); bar.style.display = 'flex';
   renderOutTb();
   document.querySelector('#page-stockout .card').scrollIntoView({behavior:'smooth', block:'start'});
-  toast('Editing ' + no + ' — make changes and click Update', 'warn');
+  toast('Editing ' + no + ' \u2014 make changes and click Update', 'warn');
 }
 function cancelEditOUT() {
-  editOUTNo = null;
-  clearOUT();
-  updateNos();
-  const btn = document.getElementById('btnOUT');
-  btn.textContent = '✓ Post Stock OUT';
-  btn.className = 'danger';
-  btn.style.cssText = '';
+  editOUTNo = null; clearOUT(); updateNos();
+  const btn = document.getElementById('btnOUT'); btn.textContent = '\u2713 Post Stock OUT'; btn.className = 'danger'; btn.style.cssText = '';
   document.getElementById('outEditBar').style.display = 'none';
   renderOutTb();
 }
@@ -1799,28 +1063,19 @@ function cancelEditOUT() {
 async function delIN(no) {
   if (!confirm('Delete entry ' + no + ' from Stock IN? This will also remove it from Google Sheets.')) return;
   if (!gsUrl) { toast('Not connected to Google Sheets','fail'); return; }
-  CACHE.stockIn = CACHE.stockIn.filter(x => x.no !== no);
-  renderAll(false);
-  const ok = await push({
-    action: 'deleteRow', sheet: 'Stock IN', entryNo: no
-  }, 'snIN');
-  if (ok) toast('✓ ' + no + ' deleted from Stock IN', 'ok');
+  CACHE.stockIn = CACHE.stockIn.filter(x => x.no !== no); renderAll(false);
+  const ok = await push({ action: 'deleteRow', sheet: 'Stock IN', entryNo: no }, 'snIN');
+  if (ok) toast('\u2713 ' + no + ' deleted from Stock IN', 'ok');
 }
 async function delOUT(no) {
   if (!confirm('Delete entry ' + no + ' from Stock OUT? This will also remove it from Google Sheets.')) return;
   if (!gsUrl) { toast('Not connected to Google Sheets','fail'); return; }
-  CACHE.stockOut = CACHE.stockOut.filter(x => x.no !== no);
-  renderAll(false);
-  const ok = await push({
-    action: 'deleteRow', sheet: 'Stock OUT', entryNo: no
-  }, 'snOUT');
-  if (ok) toast('✓ ' + no + ' deleted from Stock OUT', 'ok');
+  CACHE.stockOut = CACHE.stockOut.filter(x => x.no !== no); renderAll(false);
+  const ok = await push({ action: 'deleteRow', sheet: 'Stock OUT', entryNo: no }, 'snOUT');
+  if (ok) toast('\u2713 ' + no + ' deleted from Stock OUT', 'ok');
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  RENDER TABLES
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function fmtRs(v){ return v?v.toLocaleString('en-IN',{minimumFractionDigits:2}):'—'; }
+function fmtRs(v){ return v?v.toLocaleString('en-IN',{minimumFractionDigits:2}):'\u2014'; }
 function renderInTb(){
   let rows=[...CACHE.stockIn].reverse().slice(0,100);
   if (inFilter) {
@@ -1835,10 +1090,10 @@ function renderInTb(){
       <td class="fm" style="font-size:11px;white-space:nowrap">${e.date}</td>
       <td class="fm">${e.code}</td>
       <td style="font-weight:500">${e.name}</td>
-      <td style="color:var(--text2)">${e.supplier||'—'}</td>
+      <td style="color:var(--text2)">${e.supplier||'\u2014'}</td>
       <td class="fm">${e.qty}</td>
       <td class="fm" style="text-align:right">${fmtRs(e.total)}</td>
-      <td style="white-space:nowrap"><button class="sm" style="margin-right:4px;background:var(--blue-bg);color:var(--blue);border-color:var(--blue-bd)" onclick="editIN('${e.no}')">✎</button><button class="sm danger" onclick="delIN('${e.no}')">🗑</button></td>
+      <td style="white-space:nowrap"><button class="sm" style="margin-right:4px;background:var(--blue-bg);color:var(--blue);border-color:var(--blue-bd)" onclick="editIN('${e.no}')">\u270e</button><button class="sm danger" onclick="delIN('${e.no}')">\ud83d\uddd1</button></td>
     </tr>`).join('');
 }
 function renderOutTb(){
@@ -1855,10 +1110,10 @@ function renderOutTb(){
       <td class="fm" style="font-size:11px;white-space:nowrap">${e.date}</td>
       <td class="fm">${e.code}</td>
       <td style="font-weight:500">${e.name}</td>
-      <td style="color:var(--text2)">${e.issued||'—'}</td>
+      <td style="color:var(--text2)">${e.issued||'\u2014'}</td>
       <td class="fm">${e.qty}</td>
       <td class="fm" style="text-align:right">${fmtRs(e.total)}</td>
-      <td style="white-space:nowrap"><button class="sm" style="margin-right:4px;background:var(--blue-bg);color:var(--blue);border-color:var(--blue-bd)" onclick="editOUT('${e.no}')">✎</button><button class="sm danger" onclick="delOUT('${e.no}')">🗑</button></td>
+      <td style="white-space:nowrap"><button class="sm" style="margin-right:4px;background:var(--blue-bg);color:var(--blue);border-color:var(--blue-bd)" onclick="editOUT('${e.no}')">\u270e</button><button class="sm danger" onclick="delOUT('${e.no}')">\ud83d\uddd1</button></td>
     </tr>`).join('');
 }
 function updateNos(){
@@ -1867,7 +1122,12 @@ function updateNos(){
 }
 function renderCurrent(){
   let ti_all=0,to_all=0,low=0;
-  const rows=CACHE.products.map(p=>{
+  const filtered = curFilter ? CACHE.products.filter(p =>
+    p.code.toLowerCase().includes(curFilter) ||
+    p.name.toLowerCase().includes(curFilter) ||
+    (p.desc||'').toLowerCase().includes(curFilter)
+  ) : CACHE.products;
+  const rows=filtered.map(p=>{
     const ti=CACHE.stockIn.filter(x=>x.code===p.code).reduce((a,b)=>a+b.qty,0);
     const to=CACHE.stockOut.filter(x=>x.code===p.code).reduce((a,b)=>a+b.qty,0);
     const cur=ti-to; ti_all+=ti; to_all+=to;
@@ -1887,32 +1147,35 @@ function renderCurrent(){
     </tr>`;
   });
   document.getElementById('curTb').innerHTML = rows.length===0
-    ? '<tr><td colspan="8" style="text-align:center;color:var(--text3);padding:24px">' + (gsUrl?'No data from Sheets yet':'Connect Google Sheets to see stock') + '</td></tr>'
+    ? '<tr><td colspan="8" style="text-align:center;color:var(--text3);padding:24px">' + (curFilter ? 'No products match your search' : (gsUrl?'No data from Sheets yet':'Connect Google Sheets to see stock')) + '</td></tr>'
     : rows.join('');
-  document.getElementById('mTotal').textContent = CACHE.products.length || '—';
-  document.getElementById('mIn').textContent    = ti_all || (CACHE.products.length?'0':'—');
-  document.getElementById('mOut').textContent   = to_all || (CACHE.products.length?'0':'—');
-  document.getElementById('mLow').textContent   = low || (CACHE.products.length?'0':'—');
-  const show = low>0;
+  const cc = document.getElementById('curCount');
+  if (cc) cc.textContent = (curFilter ? filtered.length + ' of ' + CACHE.products.length : CACHE.products.length) + (CACHE.products.length === 1 ? ' product' : ' products');
+  // Note: metrics always show totals across ALL products (not filtered), so ti_all/to_all reflect filtered subset when search active
+  // Recalculate full totals for metric cards
+  let full_ti=0, full_to=0, full_low=0;
+  CACHE.products.forEach(p=>{
+    const ti=CACHE.stockIn.filter(x=>x.code===p.code).reduce((a,b)=>a+b.qty,0);
+    const to=CACHE.stockOut.filter(x=>x.code===p.code).reduce((a,b)=>a+b.qty,0);
+    const cur=ti-to; full_ti+=ti; full_to+=to;
+    if(cur<=0||cur<=p.reorder) full_low++;
+  });
+  document.getElementById('mTotal').textContent = CACHE.products.length || '\u2014';
+  document.getElementById('mIn').textContent    = full_ti || (CACHE.products.length?'0':'\u2014');
+  document.getElementById('mOut').textContent   = full_to || (CACHE.products.length?'0':'\u2014');
+  document.getElementById('mLow').textContent   = full_low || (CACHE.products.length?'0':'\u2014');
+  const show = full_low>0;
   const lb  = document.getElementById('lowBadge');
   const lbm = document.getElementById('lowBadgeM');
-  if(lb){ lb.style.display=show?'inline-block':'none'; lb.textContent=low; }
-  if(lbm){ lbm.style.display=show?'inline-block':'none'; lbm.textContent=low; }
+  if(lb){ lb.style.display=show?'inline-block':'none'; lb.textContent=full_low; }
+  if(lbm){ lbm.style.display=show?'inline-block':'none'; lbm.textContent=full_low; }
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  HELPERS
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function setBtn(id, disabled, label){
-  const el=document.getElementById(id);
-  if(!el)return;
-  el.disabled=disabled;
-  el.textContent=label;
+  const el=document.getElementById(id); if(!el)return;
+  el.disabled=disabled; el.textContent=label;
 }
-function showOverlay(msg){
-  document.getElementById('overlayMsg').textContent=msg||'Loading…';
-  document.getElementById('overlay').classList.add('show');
-}
+function showOverlay(msg){ document.getElementById('overlayMsg').textContent=msg||'Loading\u2026'; document.getElementById('overlay').classList.add('show'); }
 function hideOverlay(){ document.getElementById('overlay').classList.remove('show'); }
 
 let _tt;
@@ -1929,19 +1192,13 @@ function copyScript(){
   navigator.clipboard.writeText(txt).then(()=>toast('Script copied!','ok')).catch(()=>toast('Copy failed','warn'));
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  START
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closePicker(); });
 
-// ── Mobile: scroll focused input above keyboard ──────────
 if (window.innerWidth <= 768) {
   document.addEventListener('focusin', e => {
     const el = e.target;
     if (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA') {
-      setTimeout(() => {
-        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }, 200); // slightly faster — keyboard opens ~200ms on most devices
+      setTimeout(() => { el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 200);
     }
   });
 }
