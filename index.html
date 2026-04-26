@@ -343,7 +343,7 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
           <div class="prod-pick-wrap">
             <div class="prod-pick-disp" id="inCodeDisp"> Select product </div>
             <button class="prod-pick-btn" onclick="openPicker('in')">
-              <span style="font-size:15px">\u229e</span> Select
+              <span style="font-size:15px"></span> Select
             </button>
           </div>
           <input type="hidden" id="inCode">
@@ -359,7 +359,7 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
         </div>
         <div class="fg"><label>Total value</label><input id="inTotal" readonly class="hi"></div>
         <div class="brow">
-          <button class="prim" onclick="postIN()" id="btnIN">\u2713 Post Stock IN</button>
+          <button class="prim" onclick="postIN()" id="btnIN"> Post Stock IN</button>
           <button onclick="clearIN()">Clear</button>
         </div>
         <div class="sn" id="snIN"></div>
@@ -371,7 +371,7 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
       </div>
       <div id="inEditBar" style="display:none;padding:10px 12px;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:var(--r8);margin-bottom:10px;font-size:12px;color:var(--amber);display:none;align-items:center;gap:10px">
         <span>\u270e Editing entry \u2014 make changes above then click <strong>Update</strong></span>
-        <button class="sm" onclick="cancelEditIN()" style="margin-left:auto;color:var(--text2)">\u2715 Cancel edit</button>
+        <button class="sm" onclick="cancelEditIN()" style="margin-left:auto;color:var(--text2)"> Cancel edit</button>
       </div>
       <div class="tw">
         <table><thead><tr><th>Entry</th><th>Date</th><th>Code</th><th>Product</th><th>Supplier</th><th>Qty</th><th>Total (Rs.)</th><th style="width:100px"></th></tr></thead>
@@ -403,9 +403,9 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
         </div>
         <div class="fg"><label>Product</label>
           <div class="prod-pick-wrap">
-            <div class="prod-pick-disp" id="outCodeDisp">\u2014 Select product \u2014</div>
+            <div class="prod-pick-disp" id="outCodeDisp">Select product </div>
             <button class="prod-pick-btn" onclick="openPicker('out')">
-              <span style="font-size:15px">\u229e</span> Select
+              <span style="font-size:15px"></span> Select
             </button>
           </div>
           <input type="hidden" id="outCode">
@@ -423,7 +423,7 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
           <input id="outTotal" readonly class="hi" style="color:var(--red)!important;background:var(--red-bg)!important;border-color:var(--red-bd)!important">
         </div>
         <div class="brow">
-          <button class="danger" onclick="postOUT()" id="btnOUT">\u2713 Post Stock OUT</button>
+          <button class="danger" onclick="postOUT()" id="btnOUT"> Post Stock OUT</button>
           <button onclick="clearOUT()">Clear</button>
         </div>
         <div class="sn" id="snOUT"></div>
@@ -451,7 +451,7 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
     <div><div class="ph-title">Current Stock</div><div class="ph-sub">Live inventory auto-refreshes every 5 seconds</div></div>
     <div class="ph-right">
       <div id="livePill-current"></div>
-      <button class="sm" onclick="syncNow()">\u21bb Sync now</button>
+      <button class="sm" onclick="syncNow()"> Sync now</button>
     </div>
   </div>
   <div class="metrics">
@@ -635,7 +635,7 @@ function ok_(obj) {
     <div class="bni"    onclick="go('stockin')"  id="bni-stockin" ><span class="bic"></span><span>IN</span></div>
     <div class="bni"    onclick="go('stockout')" id="bni-stockout"><span class="bic"></span><span>OUT</span></div>
     <div class="bni"    onclick="go('current')"  id="bni-current" >
-      <span class="bic">\u25c8</span><span>Stock</span>
+      <span class="bic"></span><span>Stock</span>
       <span class="bni-badge" id="lowBadgeM" style="display:none">0</span>
     </div>
     <div class="bni"    onclick="go('setup')"    id="bni-setup"   ><span class="bic"></span><span>Setup</span></div>
