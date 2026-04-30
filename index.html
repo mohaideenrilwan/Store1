@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>StockPOS Live</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23111110'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='18' font-family='system-ui,sans-serif' font-weight='700' fill='white'>S</text></svg>">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>
 :root{
   --bg:#ffffff;--bg2:#f8f8f7;--bg3:#f0efed;
@@ -21,6 +23,13 @@
   --shadow2:0 2px 8px rgba(0,0,0,.1),0 8px 24px rgba(0,0,0,.06);
   --ff:'system-ui',-apple-system,sans-serif;--fm:'Menlo','Consolas',monospace;
   --bnav:56px;
+
+  /* Stock page palette */
+  --stock-ok-bg:#dcfce7;--stock-ok-text:#14532d;--stock-ok-bd:#86efac;
+  --stock-low-bg:#fef3c7;--stock-low-text:#78350f;--stock-low-bd:#fcd34d;
+  --stock-out-bg:#fee2e2;--stock-out-text:#7f1d1d;--stock-out-bd:#fca5a5;
+  --stock-row-ok:#f0fdf4;--stock-row-low:#fffbeb;--stock-row-out:#fff5f5;
+  --stock-header-bg:#1e293b;--stock-header-text:#e2e8f0;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{height:100%;overscroll-behavior:none}
@@ -77,6 +86,12 @@ button.prim:hover{opacity:.85}
 button.danger{background:var(--red-bg);color:var(--red);border-color:var(--red-bd)}
 button.sm{padding:6px 11px;font-size:12px}
 button:disabled{opacity:.45;cursor:not-allowed;transform:none}
+
+/* PDF Download Button */
+button.pdf-btn{background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;border:none;font-weight:600;letter-spacing:.2px;box-shadow:0 2px 6px rgba(220,38,38,.3)}
+button.pdf-btn:hover{opacity:.9;box-shadow:0 3px 10px rgba(220,38,38,.4)}
+button.pdf-btn .pdf-ico{font-size:14px}
+
 .card{background:var(--bg);border:1px solid var(--border);border-radius:var(--r12);padding:18px;margin-bottom:14px;box-shadow:var(--shadow)}
 .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
 .metric{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8);padding:14px 16px}
@@ -157,6 +172,52 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
 .prod-pick-btn{flex-shrink:0;white-space:nowrap;font-size:13px;font-weight:600;padding:10px 16px;background:var(--accent);color:var(--accent-fg);border:none;border-radius:var(--r6);cursor:pointer;display:inline-flex;align-items:center;gap:6px;touch-action:manipulation}
 .prod-pick-btn:hover{opacity:.85}
 .prod-pick-btn:active{transform:scale(.97)}
+
+/* ====== STOCK PAGE REDESIGN ====== */
+#curTb tr.row-ok td{background:var(--stock-row-ok)}
+#curTb tr.row-low td{background:var(--stock-row-low)}
+#curTb tr.row-out td{background:var(--stock-row-out)}
+#curTb tr.row-ok:hover td{background:#bbf7d0}
+#curTb tr.row-low:hover td{background:#fde68a}
+#curTb tr.row-out:hover td{background:#fecaca}
+#curTb td{border-bottom:1px solid rgba(0,0,0,.05)}
+
+.stock-table-wrap table thead tr th{
+  background:var(--stock-header-bg);
+  color:var(--stock-header-text);
+  border-bottom:none;
+  padding:11px 12px;
+  font-size:11px;
+  letter-spacing:.6px;
+}
+.pill.pok{background:var(--stock-ok-bg);color:var(--stock-ok-text);border:1px solid var(--stock-ok-bd);font-size:11px;font-weight:700;padding:3px 10px}
+.pill.plo{background:var(--stock-low-bg);color:var(--stock-low-text);border:1px solid var(--stock-low-bd);font-size:11px;font-weight:700;padding:3px 10px}
+.pill.pout{background:var(--stock-out-bg);color:var(--stock-out-text);border:1px solid var(--stock-out-bd);font-size:11px;font-weight:700;padding:3px 10px}
+
+.qty-bar-wrap{display:flex;align-items:center;gap:7px}
+.qty-num{font-family:var(--fm);font-size:12px;font-weight:700;min-width:28px}
+.qty-bar{height:6px;background:var(--border);border-radius:3px;flex:1;min-width:40px;overflow:hidden}
+.qty-bar-fill{height:100%;border-radius:3px;transition:width .3s}
+.qty-ok .qty-bar-fill{background:linear-gradient(90deg,#22c55e,#16a34a)}
+.qty-low .qty-bar-fill{background:linear-gradient(90deg,#f59e0b,#d97706)}
+.qty-out .qty-bar-fill{background:linear-gradient(90deg,#ef4444,#dc2626)}
+
+.stock-legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600}
+.legend-dot{width:9px;height:9px;border-radius:50%}
+.legend-ok .legend-dot{background:#22c55e}
+.legend-low .legend-dot{background:#f59e0b}
+.legend-out .legend-dot{background:#ef4444}
+.legend-ok{color:var(--stock-ok-text)}
+.legend-low{color:var(--stock-low-text)}
+.legend-out{color:var(--stock-out-text)}
+
+/* metric cards colored */
+.metric-ok{border-left:3px solid #22c55e}
+.metric-in{border-left:3px solid #3b82f6}
+.metric-out-m{border-left:3px solid #f59e0b}
+.metric-alert{border-left:3px solid #ef4444}
+
 @media(max-width:768px){
   html,body{height:100%;height:100dvh;overflow:hidden}
   .app-shell{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
@@ -206,6 +267,9 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
   .setup-card{max-width:100%}
   pre{font-size:10px;max-height:220px}
   #curSearch{width:100%!important;min-width:0;max-width:100%!important;font-size:16px!important;padding:10px 14px!important;min-height:44px}
+  .stock-legend{gap:8px}
+  .qty-bar{min-width:24px}
+  button.pdf-btn{font-size:13px}
 }
 @media(max-width:480px){
   .page{padding:12px 12px 16px}
@@ -251,11 +315,11 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
     <div class="topbar-logo">StockPOS</div>
     <div class="topbar-conn">
       <span class="dot" id="topDot"></span>
-      <span id="topLabel">\u2014</span>
+      <span id="topLabel">—</span>
     </div>
   </div>
   <div class="topbar-right">
-    <button class="sm" onclick="syncNow()" id="btnSyncTop">\u21bb Sync</button>
+    <button class="sm" onclick="syncNow()" id="btnSyncTop">↻ Sync</button>
   </div>
 </div>
 <div class="app">
@@ -265,11 +329,11 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
     <div class="logo-sub">Live Google Sheets System</div>
   </div>
   <nav class="nav">
-    <div class="ni on" onclick="go('products')" id="ni-products"><span class="ic"></span>Products</div>
-    <div class="ni" onclick="go('stockin')"   id="ni-stockin" ><span class="ic"></span>Stock IN</div>
-    <div class="ni" onclick="go('stockout')"  id="ni-stockout"><span class="ic"></span>Stock OUT</div>
-    <div class="ni" onclick="go('current')"   id="ni-current" ><span class="ic"></span>Current Stock <span class="nbadge" id="lowBadge" style="display:none">0</span></div>
-    <div class="ni" onclick="go('setup')"     id="ni-setup"   ><span class="ic"></span>Setup</div>
+    <div class="ni on" onclick="go('products')" id="ni-products"><span class="ic">📦</span>Products</div>
+    <div class="ni" onclick="go('stockin')"   id="ni-stockin" ><span class="ic">📥</span>Stock IN</div>
+    <div class="ni" onclick="go('stockout')"  id="ni-stockout"><span class="ic">📤</span>Stock OUT</div>
+    <div class="ni" onclick="go('current')"   id="ni-current" ><span class="ic">📊</span>Current Stock <span class="nbadge" id="lowBadge" style="display:none">0</span></div>
+    <div class="ni" onclick="go('setup')"     id="ni-setup"   ><span class="ic">⚙️</span>Setup</div>
   </nav>
   <div class="sidebar-foot">
     <div class="conn-row">
@@ -284,9 +348,10 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
 <!-- PRODUCTS PAGE -->
 <div class="page on" id="page-products">
   <div class="ph">
-    <div><div class="ph-title">Products</div><div class="ph-sub">Master catalogue  synced with Google Sheets</div></div>
+    <div><div class="ph-title">📦 Products</div><div class="ph-sub">Master catalogue synced with Google Sheets</div></div>
     <div class="ph-right">
       <div id="livePill-products"></div>
+      <button class="pdf-btn sm" onclick="downloadPDF('products')"><span class="pdf-ico">⬇</span> PDF</button>
       <button class="sm prim" onclick="openPF()">+ Add product</button>
     </div>
   </div>
@@ -309,7 +374,7 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
   </div>
   <div class="card">
     <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
-      <input style="flex:1;min-width:150px;max-width:280px" placeholder="\ud83d\udd0d Search products\u2026" oninput="filterProd(this.value)">
+      <input style="flex:1;min-width:150px;max-width:280px" placeholder="🔍 Search products…" oninput="filterProd(this.value)">
       <span style="font-size:12px;color:var(--text2)" id="prodCount"></span>
     </div>
     <div class="tw">
@@ -322,8 +387,11 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
 <!-- STOCK IN PAGE -->
 <div class="page" id="page-stockin">
   <div class="ph">
-    <div><div class="ph-title">Stock IN</div><div class="ph-sub">Record incoming inventory</div></div>
-    <div class="ph-right"><div id="livePill-stockin"></div></div>
+    <div><div class="ph-title">📥 Stock IN</div><div class="ph-sub">Record incoming inventory</div></div>
+    <div class="ph-right">
+      <div id="livePill-stockin"></div>
+      <button class="pdf-btn sm" onclick="downloadPDF('stockin')"><span class="pdf-ico">⬇</span> PDF</button>
+    </div>
   </div>
   <div id="connBanner-stockin" class="conn-banner" style="display:none"></div>
   <div class="tcol">
@@ -341,9 +409,9 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
         </div>
         <div class="fg"><label>Product</label>
           <div class="prod-pick-wrap">
-            <div class="prod-pick-disp" id="inCodeDisp"> Select product </div>
+            <div class="prod-pick-disp" id="inCodeDisp">— Select product —</div>
             <button class="prod-pick-btn" onclick="openPicker('in')">
-              <span style="font-size:15px"></span> Select
+              <span style="font-size:15px">🔍</span> Select
             </button>
           </div>
           <input type="hidden" id="inCode">
@@ -359,7 +427,7 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
         </div>
         <div class="fg"><label>Total value</label><input id="inTotal" readonly class="hi"></div>
         <div class="brow">
-          <button class="prim" onclick="postIN()" id="btnIN"> Post Stock IN</button>
+          <button class="prim" onclick="postIN()" id="btnIN">✓ Post Stock IN</button>
           <button onclick="clearIN()">Clear</button>
         </div>
         <div class="sn" id="snIN"></div>
@@ -367,11 +435,11 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
     </div>
     <div class="card">
       <div class="tw-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
-        <input id="inSearch" class="search-bar" placeholder="\ud83d\udd0d Search product\u2026" oninput="filterIN(this.value)" autocomplete="off">
+        <input id="inSearch" class="search-bar" placeholder="🔍 Search product…" oninput="filterIN(this.value)" autocomplete="off">
       </div>
-      <div id="inEditBar" style="display:none;padding:10px 12px;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:var(--r8);margin-bottom:10px;font-size:12px;color:var(--amber);display:none;align-items:center;gap:10px">
-        <span>\u270e Editing entry \u2014 make changes above then click <strong>Update</strong></span>
-        <button class="sm" onclick="cancelEditIN()" style="margin-left:auto;color:var(--text2)"> Cancel edit</button>
+      <div id="inEditBar" style="display:none;padding:10px 12px;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:var(--r8);margin-bottom:10px;font-size:12px;color:var(--amber);align-items:center;gap:10px">
+        <span>✎ Editing entry — make changes above then click <strong>Update</strong></span>
+        <button class="sm" onclick="cancelEditIN()" style="margin-left:auto;color:var(--text2)">✕ Cancel edit</button>
       </div>
       <div class="tw">
         <table><thead><tr><th>Entry</th><th>Date</th><th>Code</th><th>Product</th><th>Supplier</th><th>Qty</th><th>Total (Rs.)</th><th style="width:100px"></th></tr></thead>
@@ -384,8 +452,11 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
 <!-- STOCK OUT PAGE -->
 <div class="page" id="page-stockout">
   <div class="ph">
-    <div><div class="ph-title">Stock OUT</div><div class="ph-sub">Record outgoing inventory</div></div>
-    <div class="ph-right"><div id="livePill-stockout"></div></div>
+    <div><div class="ph-title">📤 Stock OUT</div><div class="ph-sub">Record outgoing inventory</div></div>
+    <div class="ph-right">
+      <div id="livePill-stockout"></div>
+      <button class="pdf-btn sm" onclick="downloadPDF('stockout')"><span class="pdf-ico">⬇</span> PDF</button>
+    </div>
   </div>
   <div id="connBanner-stockout" class="conn-banner" style="display:none"></div>
   <div class="tcol">
@@ -403,9 +474,9 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
         </div>
         <div class="fg"><label>Product</label>
           <div class="prod-pick-wrap">
-            <div class="prod-pick-disp" id="outCodeDisp">Select product </div>
+            <div class="prod-pick-disp" id="outCodeDisp">— Select product —</div>
             <button class="prod-pick-btn" onclick="openPicker('out')">
-              <span style="font-size:15px"></span> Select
+              <span style="font-size:15px">🔍</span> Select
             </button>
           </div>
           <input type="hidden" id="outCode">
@@ -423,7 +494,7 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
           <input id="outTotal" readonly class="hi" style="color:var(--red)!important;background:var(--red-bg)!important;border-color:var(--red-bd)!important">
         </div>
         <div class="brow">
-          <button class="danger" onclick="postOUT()" id="btnOUT"> Post Stock OUT</button>
+          <button class="danger" onclick="postOUT()" id="btnOUT">✓ Post Stock OUT</button>
           <button onclick="clearOUT()">Clear</button>
         </div>
         <div class="sn" id="snOUT"></div>
@@ -431,11 +502,11 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
     </div>
     <div class="card">
       <div class="tw-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
-        <input id="outSearch" class="search-bar" placeholder="\ud83d\udd0d Search product\u2026" oninput="filterOUT(this.value)" autocomplete="off">
+        <input id="outSearch" class="search-bar" placeholder="🔍 Search product…" oninput="filterOUT(this.value)" autocomplete="off">
       </div>
       <div id="outEditBar" style="display:none;padding:10px 12px;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:var(--r8);margin-bottom:10px;font-size:12px;color:var(--amber);align-items:center;gap:10px">
-        <span>\u270e Editing entry \u2014 make changes above then click <strong>Update</strong></span>
-        <button class="sm" onclick="cancelEditOUT()" style="margin-left:auto;color:var(--text2)">\u2715 Cancel edit</button>
+        <span>✎ Editing entry — make changes above then click <strong>Update</strong></span>
+        <button class="sm" onclick="cancelEditOUT()" style="margin-left:auto;color:var(--text2)">✕ Cancel edit</button>
       </div>
       <div class="tw">
         <table><thead><tr><th>Entry</th><th>Date</th><th>Code</th><th>Product</th><th>Issued to</th><th>Qty</th><th>Total (Rs.)</th><th style="width:100px"></th></tr></thead>
@@ -448,25 +519,31 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
 <!-- CURRENT STOCK PAGE -->
 <div class="page" id="page-current">
   <div class="ph">
-    <div><div class="ph-title">Current Stock</div><div class="ph-sub">Live inventory auto-refreshes every 5 seconds</div></div>
+    <div><div class="ph-title">📊 Current Stock</div><div class="ph-sub">Live inventory — auto-refreshes every 5 seconds</div></div>
     <div class="ph-right">
       <div id="livePill-current"></div>
-      <button class="sm" onclick="syncNow()"> Sync now</button>
+      <button class="pdf-btn sm" onclick="downloadPDF('current')"><span class="pdf-ico">⬇</span> PDF</button>
+      <button class="sm" onclick="syncNow()">↻ Sync now</button>
     </div>
   </div>
   <div class="metrics">
-    <div class="metric"><div class="ml">Products</div><div class="mv" id="mTotal">\u2014</div><div class="md">In catalogue</div></div>
-    <div class="metric"><div class="ml">Total IN</div><div class="mv" id="mIn" style="color:var(--green)"></div><div class="md">All time</div></div>
-    <div class="metric"><div class="ml">Total OUT</div><div class="mv" id="mOut" style="color:var(--amber)"></div><div class="md">All time</div></div>
-    <div class="metric"><div class="ml">Alerts</div><div class="mv" id="mLow" style="color:var(--red)"></div><div class="md">Low / out of stock</div></div>
+    <div class="metric metric-ok"><div class="ml">Products</div><div class="mv" id="mTotal">—</div><div class="md">In catalogue</div></div>
+    <div class="metric metric-in"><div class="ml">Total IN</div><div class="mv" id="mIn" style="color:#2563eb"></div><div class="md">All time</div></div>
+    <div class="metric metric-out-m"><div class="ml">Total OUT</div><div class="mv" id="mOut" style="color:var(--amber)"></div><div class="md">All time</div></div>
+    <div class="metric metric-alert"><div class="ml">Alerts</div><div class="mv" id="mLow" style="color:var(--red)"></div><div class="md">Low / out of stock</div></div>
   </div>
   <div class="card">
-    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
-      <input style="flex:1;min-width:150px;max-width:280px" placeholder="\ud83d\udd0d Search stock\u2026" id="curSearch" oninput="filterCur(this.value)" autocomplete="off">
+    <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+      <input style="flex:1;min-width:150px;max-width:280px" placeholder="🔍 Search stock…" id="curSearch" oninput="filterCur(this.value)" autocomplete="off">
       <span style="font-size:12px;color:var(--text2)" id="curCount"></span>
     </div>
-    <div class="tw">
-      <table><thead><tr><th>Code</th><th>Product</th><th>Unit</th><th>Total IN</th><th>Total OUT</th><th>Current</th><th>Reorder</th><th>Status</th></tr></thead>
+    <div class="stock-legend">
+      <span class="legend-item legend-ok"><span class="legend-dot"></span>In Stock (OK)</span>
+      <span class="legend-item legend-low"><span class="legend-dot"></span>Low Stock</span>
+      <span class="legend-item legend-out"><span class="legend-dot"></span>Out of Stock</span>
+    </div>
+    <div class="tw stock-table-wrap">
+      <table><thead><tr><th>Code</th><th>Product</th><th>Unit</th><th>Total IN</th><th>Total OUT</th><th>Current Qty</th><th>Reorder</th><th>Status</th></tr></thead>
       <tbody id="curTb"></tbody></table>
     </div>
   </div>
@@ -475,34 +552,37 @@ pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r8)
 <!-- SETUP PAGE -->
 <div class="page" id="page-setup">
   <div class="ph">
-    <div><div class="ph-title">Google Sheets Setup</div><div class="ph-sub">Connect once  always live for all users</div></div>
+    <div><div class="ph-title">⚙️ Google Sheets Setup</div><div class="ph-sub">Connect once — always live for all users</div></div>
+    <div class="ph-right">
+      <button class="pdf-btn sm" onclick="downloadPDF('setup')"><span class="pdf-ico">⬇</span> PDF Report</button>
+    </div>
   </div>
   <div class="card setup-card">
     <div class="form-title">Web App URL</div>
     <div class="fg">
       <label>Paste your Apps Script deployment URL</label>
-      <input id="mainUrl" placeholder="https://script.google.com/macros/s/\u2026/exec" oninput="setUrl(this.value)" autocomplete="off">
+      <input id="mainUrl" placeholder="https://script.google.com/macros/s/…/exec" oninput="setUrl(this.value)" autocomplete="off">
     </div>
     <div class="brow">
-      <button class="prim" onclick="testAndConnect()"> Connect</button>
-      <button onclick="forcePull()">\u21bb Force pull all data</button>
-      <button onclick="clearUrl()" style="color:var(--red)">\u2715 Disconnect</button>
+      <button class="prim" onclick="testAndConnect()">🔗 Connect</button>
+      <button onclick="forcePull()">↻ Force pull all data</button>
+      <button onclick="clearUrl()" style="color:var(--red)">✕ Disconnect</button>
     </div>
     <div id="connResult" style="font-size:12px;margin-top:10px;font-family:var(--fm);word-break:break-all;color:var(--text2)"></div>
     <div style="margin-top:16px;padding:12px 14px;background:var(--green-bg);border:1px solid var(--green-bd);border-radius:var(--r8);font-size:12px;color:var(--green);line-height:1.6">
-      \u2705 <strong>Always-live sync:</strong> Once connected, the app polls Google Sheets every <strong>5 seconds</strong>. Any change made from any device (phone, desktop, tablet) appears for everyone automatically. Google Sheets is the single source of truth \u2014 no local database.
+      ✅ <strong>Always-live sync:</strong> Once connected, the app polls Google Sheets every <strong>5 seconds</strong>. Any change made from any device appears for everyone automatically.
     </div>
     <hr style="border:none;border-top:1px solid var(--border);margin:20px 0">
-    <div class="form-title">Step 1 \u2014 Create these sheet tabs in your Google Spreadsheet</div>
+    <div class="form-title">Step 1 — Create these sheet tabs in your Google Spreadsheet</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px">
       <span class="chip">Products</span>
       <span class="chip">Stock IN</span>
       <span class="chip">Stock OUT</span>
     </div>
-    <div class="form-title">Step 2 \u2014 Paste this Apps Script</div>
+    <div class="form-title">Step 2 — Paste this Apps Script</div>
     <p style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5">
-      In Google Sheets \u2192 <strong>Extensions \u2192 Apps Script</strong>  clear existing code \u2192 paste below  click <strong>Deploy \u2192 New deployment \u2192 Web app</strong><br>
-      Execute as: <strong>Me</strong> &nbsp;|&nbsp; Access: <strong>Anyone</strong>  Deploy  copy the URL
+      In Google Sheets → <strong>Extensions → Apps Script</strong> → clear existing code → paste below → click <strong>Deploy → New deployment → Web app</strong><br>
+      Execute as: <strong>Me</strong> &nbsp;|&nbsp; Access: <strong>Anyone</strong> → Deploy → copy the URL
     </p>
     <pre id="scriptEl">function doPost(e) {
   try {
@@ -605,7 +685,7 @@ function ok_(obj) {
     .setMimeType(ContentService.MimeType.JSON);
 }</pre>
     <div style="display:flex;gap:8px;margin-top:10px">
-      <button class="sm" onclick="copyScript()">\ud83d\udccb Copy script</button>
+      <button class="sm" onclick="copyScript()">📋 Copy script</button>
     </div>
   </div>
 </div>
@@ -619,10 +699,10 @@ function ok_(obj) {
   <div class="ppBox" id="ppBox">
     <div class="ppHead">
       <div class="ppTitle">Select Product</div>
-      <button class="ppClose" onclick="closePicker()">\u2715</button>
+      <button class="ppClose" onclick="closePicker()">✕</button>
     </div>
     <div class="ppSearch">
-      <input id="ppSearchInput" placeholder="\ud83d\udd0d Search by code or name\u2026" oninput="ppFilter(this.value)" autocomplete="off">
+      <input id="ppSearchInput" placeholder="🔍 Search by code or name…" oninput="ppFilter(this.value)" autocomplete="off">
     </div>
     <div class="ppList" id="ppList"></div>
   </div>
@@ -631,14 +711,14 @@ function ok_(obj) {
 <!-- MOBILE BOTTOM NAV -->
 <nav class="bnav">
   <div class="bnav-inner">
-    <div class="bni on" onclick="go('products')" id="bni-products"><span class="bic"></span><span>Products</span></div>
-    <div class="bni"    onclick="go('stockin')"  id="bni-stockin" ><span class="bic"></span><span>IN</span></div>
-    <div class="bni"    onclick="go('stockout')" id="bni-stockout"><span class="bic"></span><span>OUT</span></div>
+    <div class="bni on" onclick="go('products')" id="bni-products"><span class="bic">📦</span><span>Products</span></div>
+    <div class="bni"    onclick="go('stockin')"  id="bni-stockin" ><span class="bic">📥</span><span>IN</span></div>
+    <div class="bni"    onclick="go('stockout')" id="bni-stockout"><span class="bic">📤</span><span>OUT</span></div>
     <div class="bni"    onclick="go('current')"  id="bni-current" >
-      <span class="bic"></span><span>Stock</span>
+      <span class="bic">📊</span><span>Stock</span>
       <span class="bni-badge" id="lowBadgeM" style="display:none">0</span>
     </div>
-    <div class="bni"    onclick="go('setup')"    id="bni-setup"   ><span class="bic"></span><span>Setup</span></div>
+    <div class="bni"    onclick="go('setup')"    id="bni-setup"   ><span class="bic">⚙️</span><span>Setup</span></div>
   </div>
 </nav>
 
@@ -671,7 +751,7 @@ function init() {
   document.getElementById('outDate').textContent = ds;
   if (gsUrl) {
     document.getElementById('mainUrl').value = gsUrl;
-    showOverlay('Connecting to Google Sheets\u2026');
+    showOverlay('Connecting to Google Sheets…');
     pull(true).then(() => hideOverlay());
     startPoll();
   } else {
@@ -683,7 +763,7 @@ function init() {
 function startPoll() { stopPoll(); pollTimer = setInterval(() => pull(false, true), POLL_MS); }
 function stopPoll() { if (pollTimer) { clearInterval(pollTimer); pollTimer = null; } }
 async function syncNow() { await pull(true); }
-async function forcePull() { showOverlay('Pulling all data from Google Sheets\u2026'); await pull(true); hideOverlay(); }
+async function forcePull() { showOverlay('Pulling all data from Google Sheets…'); await pull(true); hideOverlay(); }
 
 async function pull(showMsg, silent) {
   if (!gsUrl || pulling) return;
@@ -700,27 +780,27 @@ async function pull(showMsg, silent) {
     if (Array.isArray(d.stockOut))  { CACHE.stockOut = d.stockOut;  changed = true; }
     if (changed) renderAll(true);
     connected = true; lastPull = new Date(); setDots(true);
-    if (showMsg) toast('\u2713 Synced with Google Sheets', 'ok');
+    if (showMsg) toast('✓ Synced with Google Sheets', 'ok');
   } catch(err) {
     connected = false; setDots(false);
-    if (showMsg) toast('Sync failed \u2014 ' + err.message, 'fail');
+    if (showMsg) toast('Sync failed — ' + err.message, 'fail');
     console.warn('Pull error:', err);
   }
   pulling = false;
 }
 
 async function push(payload, snId) {
-  setSN(snId, 'syncing', '\u2191 Saving to Google Sheets\u2026');
+  setSN(snId, 'syncing', '↑ Saving to Google Sheets…');
   try {
     const r = await fetch(gsUrl, { method: 'POST', headers: {'Content-Type':'text/plain'}, body: JSON.stringify(payload) });
     const d = await r.json();
     if (d.status === 'error') throw new Error(d.msg);
-    setSN(snId, 'done', '\u2713 Saved to Google Sheets');
+    setSN(snId, 'done', '✓ Saved to Google Sheets');
     setTimeout(() => setSN(snId, null), 2500);
     await pull(false);
     return true;
   } catch(err) {
-    setSN(snId, 'fail', '\u2717 Save failed: ' + err.message);
+    setSN(snId, 'fail', '✗ Save failed: ' + err.message);
     setTimeout(() => setSN(snId, null), 4000);
     return false;
   }
@@ -747,22 +827,22 @@ async function testAndConnect() {
   const val = document.getElementById('mainUrl').value.trim();
   if (!val) { toast('Enter a URL first', 'warn'); return; }
   gsUrl = val; localStorage.setItem('gsUrl', gsUrl);
-  document.getElementById('connResult').textContent = 'Testing\u2026';
-  showOverlay('Connecting to Google Sheets\u2026');
+  document.getElementById('connResult').textContent = 'Testing…';
+  showOverlay('Connecting to Google Sheets…');
   try {
     const r = await fetch(gsUrl + '?t=' + Date.now(), { cache:'no-store' });
     const d = await r.json();
     if (d.status === 'error') throw new Error(d.msg);
     connected = true; setDots(true);
-    document.getElementById('connResult').textContent = '\u2713 Connected \u2014 ' + JSON.stringify(d).slice(0,100);
+    document.getElementById('connResult').textContent = '✓ Connected — ' + JSON.stringify(d).slice(0,100);
     if (Array.isArray(d.products)) CACHE.products = d.products;
     if (Array.isArray(d.stockIn))  CACHE.stockIn  = d.stockIn;
     if (Array.isArray(d.stockOut)) CACHE.stockOut = d.stockOut;
     renderAll(true); startPoll();
-    toast('\u2713 Connected! Live sync active (every 5s)', 'ok');
+    toast('✓ Connected! Live sync active (every 5s)', 'ok');
   } catch(err) {
     connected = false; setDots(false);
-    document.getElementById('connResult').textContent = '\u2717 ' + err.message;
+    document.getElementById('connResult').textContent = '✗ ' + err.message;
     toast('Connection failed', 'fail');
   }
   hideOverlay();
@@ -771,7 +851,7 @@ async function testAndConnect() {
 function setDots(state) {
   const cls = state === true ? 'dot live' : state === 'syncing' ? 'dot syncing' : 'dot err';
   ['sideDot','topDot'].forEach(id => { const el = document.getElementById(id); if (el) el.className = cls; });
-  const lbl = state === true ? 'Live' : state === 'syncing' ? 'Syncing\u2026' : 'Not connected';
+  const lbl = state === true ? 'Live' : state === 'syncing' ? 'Syncing…' : 'Not connected';
   const el = document.getElementById('sideLabel'); if (el) el.textContent = lbl;
   const tl = document.getElementById('topLabel'); if (tl) tl.textContent = lbl;
   if (state === true && lastPull) {
@@ -779,14 +859,14 @@ function setDots(state) {
     if (t) t.textContent = 'Updated ' + lastPull.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
   }
   const pillHtml = state === true
-    ? '<div class="live-pill"><span class="live-dot"></span>Live \u2014 refreshes every 5s</div>'
-    : '<div class="offline-pill">\u26a0 Not connected</div>';
+    ? '<div class="live-pill"><span class="live-dot"></span>Live — refreshes every 5s</div>'
+    : '<div class="offline-pill">⚠ Not connected</div>';
   ['livePill-products','livePill-stockin','livePill-stockout','livePill-current'].forEach(id => {
     const p = document.getElementById(id); if (p) p.innerHTML = pillHtml;
   });
   const bannerHtml = state === true
-    ? '<div class="cb-left cb-live">\u2713 Google Sheets connected \u2014 all entries sync instantly</div>'
-    : '<div class="cb-left cb-off">\u26a0 Not connected \u2014 <a href="#" onclick="go(\'setup\');return false" style="color:inherit">Go to Setup to connect</a></div>';
+    ? '<div class="cb-left cb-live">✓ Google Sheets connected — all entries sync instantly</div>'
+    : '<div class="cb-left cb-off">⚠ Not connected — <a href="#" onclick="go(\'setup\');return false" style="color:inherit">Go to Setup to connect</a></div>';
   ['connBanner-stockin','connBanner-stockout'].forEach(id => {
     const b = document.getElementById(id);
     if (b) { b.innerHTML = bannerHtml; b.style.display = 'flex'; b.className = 'conn-banner ' + (state===true?'cb-live':'cb-off'); }
@@ -844,12 +924,12 @@ function ppSelect(code) {
   if (!p) return;
   if (_ppTarget === 'in') {
     document.getElementById('inCode').value = code;
-    document.getElementById('inCodeDisp').textContent = p.code + ' \u00b7 ' + p.name;
+    document.getElementById('inCodeDisp').textContent = p.code + ' · ' + p.name;
     document.getElementById('inCodeDisp').classList.add('chosen');
     fillIn();
   } else {
     document.getElementById('outCode').value = code;
-    document.getElementById('outCodeDisp').textContent = p.code + ' \u00b7 ' + p.name;
+    document.getElementById('outCodeDisp').textContent = p.code + ' · ' + p.name;
     document.getElementById('outCodeDisp').classList.add('chosen');
     fillOut();
   }
@@ -866,7 +946,7 @@ function renderProds() {
       <td style="font-weight:500">${p.name}</td>
       <td>${p.unit}</td>
       <td class="fm">${p.reorder}</td>
-      <td style="color:var(--text2)">${p.desc||'\u2014'}</td>
+      <td style="color:var(--text2)">${p.desc||'—'}</td>
       <td><button class="sm" style="margin-right:4px" onclick="editProd('${p.code}')">Edit</button><button class="sm" onclick="delProd('${p.code}')">Del</button></td>
     </tr>`).join('');
 }
@@ -927,7 +1007,7 @@ function calcIn(){
 }
 function clearIN(){
   ['inCode','inName','inUnit','inSupp','inQty','inPrice','inTotal'].forEach(id=>{document.getElementById(id).value='';});
-  const d=document.getElementById('inCodeDisp'); d.textContent='\u2014 Select product \u2014'; d.classList.remove('chosen');
+  const d=document.getElementById('inCodeDisp'); d.textContent='— Select product —'; d.classList.remove('chosen');
 }
 async function postIN(){
   if (!gsUrl) { toast('Not connected to Google Sheets','fail'); return; }
@@ -942,19 +1022,19 @@ async function postIN(){
     const idx = CACHE.stockIn.findIndex(x => x.no === editINNo);
     if (idx === -1) { toast('Entry not found','fail'); return; }
     const updated = { no: editINNo, date: CACHE.stockIn[idx].date, code, name:p.name, unit:p.unit, supplier: document.getElementById('inSupp').value||'', qty, price, total: qty*price };
-    setBtn('btnIN', true, 'Updating\u2026');
+    setBtn('btnIN', true, 'Updating…');
     const del = await push({ action:'deleteRow', sheet:'Stock IN', entryNo: editINNo }, null);
     if (del) {
       const ok = await push({ action:'append', sheet:'Stock IN', header:['Entry No','Date','Code','Product','Unit','Supplier','Qty','Unit Price','Total'], row:[updated.no,updated.date,updated.code,updated.name,updated.unit,updated.supplier,updated.qty,updated.price,updated.total] }, 'snIN');
-      setBtn('btnIN', false, '\u2713 Update Stock IN');
-      if (ok) { cancelEditIN(); toast('\u2713 '+editINNo+' updated in Stock IN', 'ok'); }
-    } else { setBtn('btnIN', false, '\u2713 Update Stock IN'); toast('Update failed','fail'); }
+      setBtn('btnIN', false, '✓ Update Stock IN');
+      if (ok) { cancelEditIN(); toast('✓ '+editINNo+' updated in Stock IN', 'ok'); }
+    } else { setBtn('btnIN', false, '✓ Update Stock IN'); toast('Update failed','fail'); }
   } else {
     const e={ no:'IN-'+String(CACHE.stockIn.length+1).padStart(3,'0'), date:new Date().toLocaleDateString('en-GB'), code, name:p.name, unit:p.unit, supplier:document.getElementById('inSupp').value||'', qty, price, total:qty*price };
-    setBtn('btnIN', true, 'Posting\u2026');
+    setBtn('btnIN', true, 'Posting…');
     const ok = await push({ action:'append', sheet:'Stock IN', header:['Entry No','Date','Code','Product','Unit','Supplier','Qty','Unit Price','Total'], row:[e.no,e.date,e.code,e.name,e.unit,e.supplier,e.qty,e.price,e.total] }, 'snIN');
-    setBtn('btnIN', false, '\u2713 Post Stock IN');
-    if (ok) { clearIN(); toast('\u2713 Stock IN posted: '+e.no, 'ok'); }
+    setBtn('btnIN', false, '✓ Post Stock IN');
+    if (ok) { clearIN(); toast('✓ Stock IN posted: '+e.no, 'ok'); }
   }
 }
 
@@ -970,7 +1050,7 @@ function calcOut(){
 }
 function clearOUT(){
   ['outCode','outName','outUnit','outIssued','outQty','outPrice','outTotal'].forEach(id=>{document.getElementById(id).value='';});
-  const d=document.getElementById('outCodeDisp'); d.textContent='\u2014 Select product \u2014'; d.classList.remove('chosen');
+  const d=document.getElementById('outCodeDisp'); d.textContent='— Select product —'; d.classList.remove('chosen');
 }
 async function postOUT(){
   if (!gsUrl) { toast('Not connected to Google Sheets','fail'); return; }
@@ -984,23 +1064,23 @@ async function postOUT(){
     const p=CACHE.products.find(x=>x.code===code);
     const price=parseFloat(document.getElementById('outPrice').value)||0;
     const updated = { no: editOUTNo, date: CACHE.stockOut[idx].date, code, name:p?p.name:code, unit:p?p.unit:'', issued: document.getElementById('outIssued').value||'', qty, price, total: qty*price };
-    setBtn('btnOUT', true, 'Updating\u2026');
+    setBtn('btnOUT', true, 'Updating…');
     const del = await push({ action:'deleteRow', sheet:'Stock OUT', entryNo: editOUTNo }, null);
     if (del) {
       const ok = await push({ action:'append', sheet:'Stock OUT', header:['Entry No','Date','Code','Product','Unit','Issued To','Qty','Unit Price','Total'], row:[updated.no,updated.date,updated.code,updated.name,updated.unit,updated.issued,updated.qty,updated.price,updated.total] }, 'snOUT');
-      setBtn('btnOUT', false, '\u2713 Update Stock OUT');
-      if (ok) { cancelEditOUT(); toast('\u2713 '+editOUTNo+' updated in Stock OUT', 'ok'); }
-    } else { setBtn('btnOUT', false, '\u2713 Update Stock OUT'); toast('Update failed','fail'); }
+      setBtn('btnOUT', false, '✓ Update Stock OUT');
+      if (ok) { cancelEditOUT(); toast('✓ '+editOUTNo+' updated in Stock OUT', 'ok'); }
+    } else { setBtn('btnOUT', false, '✓ Update Stock OUT'); toast('Update failed','fail'); }
   } else {
     const cur=CACHE.stockIn.filter(x=>x.code===code).reduce((a,b)=>a+b.qty,0)-CACHE.stockOut.filter(x=>x.code===code).reduce((a,b)=>a+b.qty,0);
     if (qty>cur){toast('Insufficient stock ('+cur+' available)','warn');return;}
     const p=CACHE.products.find(x=>x.code===code);
     const price=parseFloat(document.getElementById('outPrice').value)||0;
     const e={ no:'OUT-'+String(CACHE.stockOut.length+1).padStart(3,'0'), date:new Date().toLocaleDateString('en-GB'), code, name:p.name, unit:p.unit, issued:document.getElementById('outIssued').value||'', qty, price, total:qty*price };
-    setBtn('btnOUT', true, 'Posting\u2026');
+    setBtn('btnOUT', true, 'Posting…');
     const ok = await push({ action:'append', sheet:'Stock OUT', header:['Entry No','Date','Code','Product','Unit','Issued To','Qty','Unit Price','Total'], row:[e.no,e.date,e.code,e.name,e.unit,e.issued,e.qty,e.price,e.total] }, 'snOUT');
-    setBtn('btnOUT', false, '\u2713 Post Stock OUT');
-    if (ok) { clearOUT(); toast('\u2713 Stock OUT posted: '+e.no, 'ok'); }
+    setBtn('btnOUT', false, '✓ Post Stock OUT');
+    if (ok) { clearOUT(); toast('✓ Stock OUT posted: '+e.no, 'ok'); }
   }
 }
 
@@ -1012,7 +1092,7 @@ function editIN(no) {
   const e = CACHE.stockIn.find(x => x.no === no); if (!e) return;
   editINNo = no;
   document.getElementById('inCode').value = e.code;
-  const disp = document.getElementById('inCodeDisp'); disp.textContent = e.code + ' \u00b7 ' + e.name; disp.classList.add('chosen');
+  const disp = document.getElementById('inCodeDisp'); disp.textContent = e.code + ' · ' + e.name; disp.classList.add('chosen');
   document.getElementById('inName').value = e.name;
   document.getElementById('inUnit').value = e.unit;
   document.getElementById('inSupp').value = e.supplier || '';
@@ -1020,17 +1100,17 @@ function editIN(no) {
   document.getElementById('inPrice').value = e.price;
   calcIn();
   document.getElementById('inNo').textContent = no;
-  document.getElementById('btnIN').textContent = '\u2713 Update Stock IN';
+  document.getElementById('btnIN').textContent = '✓ Update Stock IN';
   document.getElementById('btnIN').classList.remove('prim');
   document.getElementById('btnIN').style.cssText = 'background:var(--amber-bg);color:var(--amber);border-color:var(--amber-bd)';
   const bar = document.getElementById('inEditBar'); bar.style.display = 'flex';
   renderInTb();
   document.querySelector('#page-stockin .card').scrollIntoView({behavior:'smooth', block:'start'});
-  toast('Editing ' + no + ' \u2014 make changes and click Update', 'warn');
+  toast('Editing ' + no + ' — make changes and click Update', 'warn');
 }
 function cancelEditIN() {
   editINNo = null; clearIN(); updateNos();
-  const btn = document.getElementById('btnIN'); btn.textContent = '\u2713 Post Stock IN'; btn.classList.add('prim'); btn.style.cssText = '';
+  const btn = document.getElementById('btnIN'); btn.textContent = '✓ Post Stock IN'; btn.classList.add('prim'); btn.style.cssText = '';
   document.getElementById('inEditBar').style.display = 'none';
   renderInTb();
 }
@@ -1039,7 +1119,7 @@ function editOUT(no) {
   const e = CACHE.stockOut.find(x => x.no === no); if (!e) return;
   editOUTNo = no;
   document.getElementById('outCode').value = e.code;
-  const disp = document.getElementById('outCodeDisp'); disp.textContent = e.code + ' \u00b7 ' + e.name; disp.classList.add('chosen');
+  const disp = document.getElementById('outCodeDisp'); disp.textContent = e.code + ' · ' + e.name; disp.classList.add('chosen');
   document.getElementById('outName').value = e.name;
   document.getElementById('outUnit').value = e.unit;
   document.getElementById('outIssued').value = e.issued || '';
@@ -1047,15 +1127,15 @@ function editOUT(no) {
   document.getElementById('outPrice').value = e.price;
   calcOut();
   document.getElementById('outNo').textContent = no;
-  const btn = document.getElementById('btnOUT'); btn.textContent = '\u2713 Update Stock OUT'; btn.className = 'danger'; btn.style.cssText = 'background:var(--amber-bg);color:var(--amber);border-color:var(--amber-bd)';
+  const btn = document.getElementById('btnOUT'); btn.textContent = '✓ Update Stock OUT'; btn.className = 'danger'; btn.style.cssText = 'background:var(--amber-bg);color:var(--amber);border-color:var(--amber-bd)';
   const bar = document.getElementById('outEditBar'); bar.style.display = 'flex';
   renderOutTb();
   document.querySelector('#page-stockout .card').scrollIntoView({behavior:'smooth', block:'start'});
-  toast('Editing ' + no + ' \u2014 make changes and click Update', 'warn');
+  toast('Editing ' + no + ' — make changes and click Update', 'warn');
 }
 function cancelEditOUT() {
   editOUTNo = null; clearOUT(); updateNos();
-  const btn = document.getElementById('btnOUT'); btn.textContent = '\u2713 Post Stock OUT'; btn.className = 'danger'; btn.style.cssText = '';
+  const btn = document.getElementById('btnOUT'); btn.textContent = '✓ Post Stock OUT'; btn.className = 'danger'; btn.style.cssText = '';
   document.getElementById('outEditBar').style.display = 'none';
   renderOutTb();
 }
@@ -1065,17 +1145,17 @@ async function delIN(no) {
   if (!gsUrl) { toast('Not connected to Google Sheets','fail'); return; }
   CACHE.stockIn = CACHE.stockIn.filter(x => x.no !== no); renderAll(false);
   const ok = await push({ action: 'deleteRow', sheet: 'Stock IN', entryNo: no }, 'snIN');
-  if (ok) toast('\u2713 ' + no + ' deleted from Stock IN', 'ok');
+  if (ok) toast('✓ ' + no + ' deleted from Stock IN', 'ok');
 }
 async function delOUT(no) {
   if (!confirm('Delete entry ' + no + ' from Stock OUT? This will also remove it from Google Sheets.')) return;
   if (!gsUrl) { toast('Not connected to Google Sheets','fail'); return; }
   CACHE.stockOut = CACHE.stockOut.filter(x => x.no !== no); renderAll(false);
   const ok = await push({ action: 'deleteRow', sheet: 'Stock OUT', entryNo: no }, 'snOUT');
-  if (ok) toast('\u2713 ' + no + ' deleted from Stock OUT', 'ok');
+  if (ok) toast('✓ ' + no + ' deleted from Stock OUT', 'ok');
 }
 
-function fmtRs(v){ return v?v.toLocaleString('en-IN',{minimumFractionDigits:2}):'\u2014'; }
+function fmtRs(v){ return v?v.toLocaleString('en-IN',{minimumFractionDigits:2}):'—'; }
 function renderInTb(){
   let rows=[...CACHE.stockIn].reverse().slice(0,100);
   if (inFilter) {
@@ -1090,10 +1170,10 @@ function renderInTb(){
       <td class="fm" style="font-size:11px;white-space:nowrap">${e.date}</td>
       <td class="fm">${e.code}</td>
       <td style="font-weight:500">${e.name}</td>
-      <td style="color:var(--text2)">${e.supplier||'\u2014'}</td>
+      <td style="color:var(--text2)">${e.supplier||'—'}</td>
       <td class="fm">${e.qty}</td>
       <td class="fm" style="text-align:right">${fmtRs(e.total)}</td>
-      <td style="white-space:nowrap"><button class="sm" style="margin-right:4px;background:var(--blue-bg);color:var(--blue);border-color:var(--blue-bd)" onclick="editIN('${e.no}')">\u270e</button><button class="sm danger" onclick="delIN('${e.no}')">\ud83d\uddd1</button></td>
+      <td style="white-space:nowrap"><button class="sm" style="margin-right:4px;background:var(--blue-bg);color:var(--blue);border-color:var(--blue-bd)" onclick="editIN('${e.no}')">✎</button><button class="sm danger" onclick="delIN('${e.no}')">🗑</button></td>
     </tr>`).join('');
 }
 function renderOutTb(){
@@ -1110,60 +1190,74 @@ function renderOutTb(){
       <td class="fm" style="font-size:11px;white-space:nowrap">${e.date}</td>
       <td class="fm">${e.code}</td>
       <td style="font-weight:500">${e.name}</td>
-      <td style="color:var(--text2)">${e.issued||'\u2014'}</td>
+      <td style="color:var(--text2)">${e.issued||'—'}</td>
       <td class="fm">${e.qty}</td>
       <td class="fm" style="text-align:right">${fmtRs(e.total)}</td>
-      <td style="white-space:nowrap"><button class="sm" style="margin-right:4px;background:var(--blue-bg);color:var(--blue);border-color:var(--blue-bd)" onclick="editOUT('${e.no}')">\u270e</button><button class="sm danger" onclick="delOUT('${e.no}')">\ud83d\uddd1</button></td>
+      <td style="white-space:nowrap"><button class="sm" style="margin-right:4px;background:var(--blue-bg);color:var(--blue);border-color:var(--blue-bd)" onclick="editOUT('${e.no}')">✎</button><button class="sm danger" onclick="delOUT('${e.no}')">🗑</button></td>
     </tr>`).join('');
 }
 function updateNos(){
   document.getElementById('inNo').textContent='IN-'+String(CACHE.stockIn.length+1).padStart(3,'0');
   document.getElementById('outNo').textContent='OUT-'+String(CACHE.stockOut.length+1).padStart(3,'0');
 }
+
+function getStockRow(p) {
+  const ti = CACHE.stockIn.filter(x=>x.code===p.code).reduce((a,b)=>a+b.qty,0);
+  const to = CACHE.stockOut.filter(x=>x.code===p.code).reduce((a,b)=>a+b.qty,0);
+  const cur = ti - to;
+  let status, cls, rowCls, barCls;
+  if (cur <= 0) { status='Out of stock'; cls='pout'; rowCls='row-out'; barCls='qty-out'; }
+  else if (cur <= p.reorder) { status='Low stock'; cls='plo'; rowCls='row-low'; barCls='qty-low'; }
+  else { status='OK'; cls='pok'; rowCls='row-ok'; barCls='qty-ok'; }
+  return { ti, to, cur, status, cls, rowCls, barCls };
+}
+
 function renderCurrent(){
-  let ti_all=0,to_all=0,low=0;
   const filtered = curFilter ? CACHE.products.filter(p =>
     p.code.toLowerCase().includes(curFilter) ||
     p.name.toLowerCase().includes(curFilter) ||
     (p.desc||'').toLowerCase().includes(curFilter)
   ) : CACHE.products;
-  const rows=filtered.map(p=>{
-    const ti=CACHE.stockIn.filter(x=>x.code===p.code).reduce((a,b)=>a+b.qty,0);
-    const to=CACHE.stockOut.filter(x=>x.code===p.code).reduce((a,b)=>a+b.qty,0);
-    const cur=ti-to; ti_all+=ti; to_all+=to;
-    let status,cls;
-    if(cur<=0){status='Out of stock';cls='pout';low++;}
-    else if(cur<=p.reorder){status='Low stock';cls='plo';low++;}
-    else{status='OK';cls='pok';}
-    return`<tr>
-      <td class="fm">${p.code}</td>
-      <td style="font-weight:500">${p.name}</td>
-      <td>${p.unit}</td>
-      <td class="fm">${ti}</td>
-      <td class="fm">${to}</td>
-      <td class="fm" style="font-weight:700">${cur}</td>
-      <td class="fm">${p.reorder}</td>
+
+  let full_ti=0, full_to=0, full_low=0;
+  CACHE.products.forEach(p=>{
+    const {ti,to,cur} = getStockRow(p);
+    full_ti+=ti; full_to+=to;
+    if(cur<=0||cur<=p.reorder) full_low++;
+  });
+
+  const rows = filtered.map(p => {
+    const {ti,to,cur,status,cls,rowCls,barCls} = getStockRow(p);
+    const maxQty = Math.max(ti, 1);
+    const pct = Math.min(100, Math.round((cur / maxQty) * 100));
+    return `<tr class="${rowCls}">
+      <td class="fm" style="font-weight:600;color:#334155">${p.code}</td>
+      <td style="font-weight:600">${p.name}</td>
+      <td style="color:var(--text2);font-size:12px">${p.unit}</td>
+      <td class="fm" style="color:#2563eb;font-weight:600">${ti}</td>
+      <td class="fm" style="color:#d97706;font-weight:600">${to}</td>
+      <td>
+        <div class="qty-bar-wrap ${barCls}">
+          <span class="qty-num" style="${cur<=0?'color:#dc2626':cur<=p.reorder?'color:#d97706':'color:#16a34a'}">${cur}</span>
+          <div class="qty-bar"><div class="qty-bar-fill" style="width:${pct}%"></div></div>
+        </div>
+      </td>
+      <td class="fm" style="color:var(--text3)">${p.reorder}</td>
       <td><span class="pill ${cls}">${status}</span></td>
     </tr>`;
   });
+
   document.getElementById('curTb').innerHTML = rows.length===0
     ? '<tr><td colspan="8" style="text-align:center;color:var(--text3);padding:24px">' + (curFilter ? 'No products match your search' : (gsUrl?'No data from Sheets yet':'Connect Google Sheets to see stock')) + '</td></tr>'
     : rows.join('');
+
   const cc = document.getElementById('curCount');
   if (cc) cc.textContent = (curFilter ? filtered.length + ' of ' + CACHE.products.length : CACHE.products.length) + (CACHE.products.length === 1 ? ' product' : ' products');
-  // Note: metrics always show totals across ALL products (not filtered), so ti_all/to_all reflect filtered subset when search active
-  // Recalculate full totals for metric cards
-  let full_ti=0, full_to=0, full_low=0;
-  CACHE.products.forEach(p=>{
-    const ti=CACHE.stockIn.filter(x=>x.code===p.code).reduce((a,b)=>a+b.qty,0);
-    const to=CACHE.stockOut.filter(x=>x.code===p.code).reduce((a,b)=>a+b.qty,0);
-    const cur=ti-to; full_ti+=ti; full_to+=to;
-    if(cur<=0||cur<=p.reorder) full_low++;
-  });
-  document.getElementById('mTotal').textContent = CACHE.products.length || '\u2014';
-  document.getElementById('mIn').textContent    = full_ti || (CACHE.products.length?'0':'\u2014');
-  document.getElementById('mOut').textContent   = full_to || (CACHE.products.length?'0':'\u2014');
-  document.getElementById('mLow').textContent   = full_low || (CACHE.products.length?'0':'\u2014');
+
+  document.getElementById('mTotal').textContent = CACHE.products.length || '—';
+  document.getElementById('mIn').textContent    = full_ti || (CACHE.products.length?'0':'—');
+  document.getElementById('mOut').textContent   = full_to || (CACHE.products.length?'0':'—');
+  document.getElementById('mLow').textContent   = full_low || (CACHE.products.length?'0':'—');
   const show = full_low>0;
   const lb  = document.getElementById('lowBadge');
   const lbm = document.getElementById('lowBadgeM');
@@ -1175,7 +1269,7 @@ function setBtn(id, disabled, label){
   const el=document.getElementById(id); if(!el)return;
   el.disabled=disabled; el.textContent=label;
 }
-function showOverlay(msg){ document.getElementById('overlayMsg').textContent=msg||'Loading\u2026'; document.getElementById('overlay').classList.add('show'); }
+function showOverlay(msg){ document.getElementById('overlayMsg').textContent=msg||'Loading…'; document.getElementById('overlay').classList.add('show'); }
 function hideOverlay(){ document.getElementById('overlay').classList.remove('show'); }
 
 let _tt;
@@ -1190,6 +1284,256 @@ function toast(msg, type){
 function copyScript(){
   const txt=document.getElementById('scriptEl').textContent;
   navigator.clipboard.writeText(txt).then(()=>toast('Script copied!','ok')).catch(()=>toast('Copy failed','warn'));
+}
+
+/* ===== PDF DOWNLOAD ===== */
+function pdfHeader(doc, title, subtitle) {
+  const now = new Date().toLocaleString('en-GB');
+  // Dark header bar
+  doc.setFillColor(30, 41, 59);
+  doc.rect(0, 0, 297, 22, 'F');
+  doc.setTextColor(226, 232, 240);
+  doc.setFontSize(13);
+  doc.setFont('helvetica','bold');
+  doc.text('StockPOS', 10, 14);
+  doc.setFontSize(10);
+  doc.setFont('helvetica','normal');
+  doc.text(title, 60, 14);
+  doc.setFontSize(8);
+  doc.setTextColor(148, 163, 184);
+  doc.text('Generated: ' + now, 200, 14, {align:'right'});
+  doc.setTextColor(30, 41, 59);
+  return 30;
+}
+
+function pdfFooter(doc, pageNum, totalPages) {
+  const pw = doc.internal.pageSize.getWidth();
+  const ph = doc.internal.pageSize.getHeight();
+  doc.setFillColor(248, 248, 247);
+  doc.rect(0, ph - 12, pw, 12, 'F');
+  doc.setDrawColor(227, 226, 223);
+  doc.setLineWidth(0.3);
+  doc.line(0, ph - 12, pw, ph - 12);
+  doc.setFontSize(7.5);
+  doc.setFont('helvetica','normal');
+  doc.setTextColor(156, 154, 148);
+  doc.text('StockPOS — Google Sheets Inventory System', 10, ph - 4);
+  doc.text('Page ' + pageNum + ' of ' + totalPages, pw - 10, ph - 4, {align:'right'});
+}
+
+function downloadPDF(page) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+
+  if (page === 'products') {
+    let y = pdfHeader(doc, 'Products Catalogue', dateStr);
+    doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(92,92,87);
+    doc.text('Total products: ' + CACHE.products.length, 10, y); y += 6;
+
+    const rows = CACHE.products.map(p => [p.code, p.name, p.unit, p.reorder, p.desc||'—']);
+    doc.autoTable({
+      startY: y,
+      head: [['Code','Product Name','Unit','Reorder Lvl','Description']],
+      body: rows.length ? rows : [['—','No products yet','','','']],
+      theme: 'grid',
+      headStyles: { fillColor:[30,41,59], textColor:[226,232,240], fontStyle:'bold', fontSize:9 },
+      bodyStyles: { fontSize:9, textColor:[30,30,28] },
+      alternateRowStyles: { fillColor:[248,248,247] },
+      columnStyles: { 0:{cellWidth:28,fontStyle:'bold'}, 1:{cellWidth:70}, 2:{cellWidth:22}, 3:{cellWidth:28}, 4:{cellWidth:'auto'} },
+      margin: { left:10, right:10 },
+      didDrawPage: (data) => {
+        pdfFooter(doc, data.pageNumber, doc.internal.getNumberOfPages());
+      }
+    });
+    doc.save('StockPOS_Products_' + dateStr.replace(/ /g,'_') + '.pdf');
+    toast('✓ Products PDF downloaded', 'ok');
+
+  } else if (page === 'stockin') {
+    let y = pdfHeader(doc, 'Stock IN Register', dateStr);
+    const totalVal = CACHE.stockIn.reduce((a,b)=>a+b.total,0);
+    doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(92,92,87);
+    doc.text('Total entries: ' + CACHE.stockIn.length + '   |   Total value: Rs. ' + totalVal.toLocaleString('en-IN',{minimumFractionDigits:2}), 10, y); y+=6;
+
+    const rows = [...CACHE.stockIn].reverse().map(e => [
+      e.no, e.date, e.code, e.name, e.unit, e.supplier||'—', e.qty,
+      e.price ? 'Rs. ' + e.price.toLocaleString('en-IN',{minimumFractionDigits:2}) : '—',
+      e.total ? 'Rs. ' + e.total.toLocaleString('en-IN',{minimumFractionDigits:2}) : '—'
+    ]);
+    doc.autoTable({
+      startY: y,
+      head: [['Entry No','Date','Code','Product','Unit','Supplier','Qty','Unit Price','Total']],
+      body: rows.length ? rows : [['—','No entries yet','','','','','','','']],
+      theme: 'grid',
+      headStyles: { fillColor:[20,108,58], textColor:[255,255,255], fontStyle:'bold', fontSize:8.5 },
+      bodyStyles: { fontSize:8.5, textColor:[30,30,28] },
+      alternateRowStyles: { fillColor:[237,247,241] },
+      columnStyles: {
+        0:{cellWidth:22,fontStyle:'bold'}, 1:{cellWidth:24}, 2:{cellWidth:20},
+        3:{cellWidth:55}, 4:{cellWidth:16}, 5:{cellWidth:38},
+        6:{cellWidth:14,halign:'right'}, 7:{cellWidth:26,halign:'right'}, 8:{cellWidth:30,halign:'right'}
+      },
+      margin: { left:10, right:10 },
+      didDrawPage: (data) => {
+        pdfFooter(doc, data.pageNumber, doc.internal.getNumberOfPages());
+      }
+    });
+    doc.save('StockPOS_StockIN_' + dateStr.replace(/ /g,'_') + '.pdf');
+    toast('✓ Stock IN PDF downloaded', 'ok');
+
+  } else if (page === 'stockout') {
+    let y = pdfHeader(doc, 'Stock OUT Register', dateStr);
+    const totalVal = CACHE.stockOut.reduce((a,b)=>a+b.total,0);
+    doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(92,92,87);
+    doc.text('Total entries: ' + CACHE.stockOut.length + '   |   Total value: Rs. ' + totalVal.toLocaleString('en-IN',{minimumFractionDigits:2}), 10, y); y+=6;
+
+    const rows = [...CACHE.stockOut].reverse().map(e => [
+      e.no, e.date, e.code, e.name, e.unit, e.issued||'—', e.qty,
+      e.price ? 'Rs. ' + e.price.toLocaleString('en-IN',{minimumFractionDigits:2}) : '—',
+      e.total ? 'Rs. ' + e.total.toLocaleString('en-IN',{minimumFractionDigits:2}) : '—'
+    ]);
+    doc.autoTable({
+      startY: y,
+      head: [['Entry No','Date','Code','Product','Unit','Issued To','Qty','Unit Price','Total']],
+      body: rows.length ? rows : [['—','No entries yet','','','','','','','']],
+      theme: 'grid',
+      headStyles: { fillColor:[155,21,21], textColor:[255,255,255], fontStyle:'bold', fontSize:8.5 },
+      bodyStyles: { fontSize:8.5, textColor:[30,30,28] },
+      alternateRowStyles: { fillColor:[255,241,241] },
+      columnStyles: {
+        0:{cellWidth:22,fontStyle:'bold'}, 1:{cellWidth:24}, 2:{cellWidth:20},
+        3:{cellWidth:55}, 4:{cellWidth:16}, 5:{cellWidth:38},
+        6:{cellWidth:14,halign:'right'}, 7:{cellWidth:26,halign:'right'}, 8:{cellWidth:30,halign:'right'}
+      },
+      margin: { left:10, right:10 },
+      didDrawPage: (data) => {
+        pdfFooter(doc, data.pageNumber, doc.internal.getNumberOfPages());
+      }
+    });
+    doc.save('StockPOS_StockOUT_' + dateStr.replace(/ /g,'_') + '.pdf');
+    toast('✓ Stock OUT PDF downloaded', 'ok');
+
+  } else if (page === 'current') {
+    let y = pdfHeader(doc, 'Current Stock Report', dateStr);
+
+    // Summary metrics
+    let full_ti=0, full_to=0, full_low=0, full_out=0;
+    CACHE.products.forEach(p=>{
+      const {ti,to,cur} = getStockRow(p);
+      full_ti+=ti; full_to+=to;
+      if(cur<=0) full_out++;
+      else if(cur<=p.reorder) full_low++;
+    });
+
+    doc.setFillColor(240, 253, 244); doc.rect(10, y, 62, 16, 'F');
+    doc.setFillColor(239, 246, 255); doc.rect(76, y, 62, 16, 'F');
+    doc.setFillColor(255, 251, 235); doc.rect(142, y, 62, 16, 'F');
+    doc.setFillColor(255, 241, 241); doc.rect(208, y, 62, 16, 'F');
+
+    const boxes = [
+      {x:10, label:'Products', val:String(CACHE.products.length), color:[20,108,58]},
+      {x:76, label:'Total IN', val:String(full_ti), color:[37,99,235]},
+      {x:142, label:'Total OUT', val:String(full_to), color:[122,72,0]},
+      {x:208, label:'Alerts', val:String(full_low+full_out), color:[155,21,21]},
+    ];
+    boxes.forEach(b => {
+      doc.setFontSize(7.5); doc.setFont('helvetica','normal'); doc.setTextColor(92,92,87);
+      doc.text(b.label, b.x+5, y+6);
+      doc.setFontSize(16); doc.setFont('helvetica','bold'); doc.setTextColor(...b.color);
+      doc.text(b.val, b.x+5, y+14);
+    });
+    y += 22;
+
+    const rows = CACHE.products.map(p => {
+      const {ti,to,cur,status} = getStockRow(p);
+      return [p.code, p.name, p.unit, ti, to, cur, p.reorder, status];
+    });
+
+    doc.autoTable({
+      startY: y,
+      head: [['Code','Product','Unit','Total IN','Total OUT','Current Qty','Reorder Lvl','Status']],
+      body: rows.length ? rows : [['—','No products','','','','','','']],
+      theme: 'grid',
+      headStyles: { fillColor:[30,41,59], textColor:[226,232,240], fontStyle:'bold', fontSize:9 },
+      bodyStyles: { fontSize:9, textColor:[30,30,28] },
+      columnStyles: {
+        0:{cellWidth:25,fontStyle:'bold'}, 1:{cellWidth:65},
+        2:{cellWidth:18}, 3:{cellWidth:22,halign:'right'}, 4:{cellWidth:24,halign:'right'},
+        5:{cellWidth:24,halign:'right',fontStyle:'bold'}, 6:{cellWidth:22,halign:'right'}, 7:{cellWidth:28}
+      },
+      margin: { left:10, right:10 },
+      willDrawCell: (data) => {
+        if (data.section === 'body' && data.column.index === 7) {
+          const v = data.cell.raw;
+          if (v === 'Out of stock') { doc.setTextColor(127,29,29); }
+          else if (v === 'Low stock') { doc.setTextColor(120,53,15); }
+          else { doc.setTextColor(20,83,45); }
+        }
+        if (data.section === 'body' && data.column.index === 5) {
+          const cur = parseInt(data.cell.raw);
+          if (cur <= 0) doc.setTextColor(220,38,38);
+          else if (!isNaN(cur)) doc.setTextColor(22,163,74);
+        }
+      },
+      didParseCell: (data) => {
+        if (data.section === 'body') {
+          const status = data.row.raw[7];
+          if (status === 'Out of stock') data.cell.styles.fillColor = [254,226,226];
+          else if (status === 'Low stock') data.cell.styles.fillColor = [254,243,199];
+          else data.cell.styles.fillColor = [240,253,244];
+        }
+      },
+      didDrawPage: (data) => {
+        pdfFooter(doc, data.pageNumber, doc.internal.getNumberOfPages());
+      }
+    });
+    doc.save('StockPOS_CurrentStock_' + dateStr.replace(/ /g,'_') + '.pdf');
+    toast('✓ Current Stock PDF downloaded', 'ok');
+
+  } else if (page === 'setup') {
+    // System summary report
+    let y = pdfHeader(doc, 'System Summary Report', dateStr);
+
+    let full_ti=0, full_to=0, full_low=0;
+    CACHE.products.forEach(p=>{
+      const {ti,to,cur} = getStockRow(p);
+      full_ti+=ti; full_to+=to;
+      if(cur<=0||cur<=p.reorder) full_low++;
+    });
+
+    doc.setFontSize(11); doc.setFont('helvetica','bold'); doc.setTextColor(30,41,59);
+    doc.text('System Overview', 10, y); y+=7;
+
+    const summaryRows = [
+      ['Total Products', CACHE.products.length],
+      ['Total Stock IN Entries', CACHE.stockIn.length],
+      ['Total Stock OUT Entries', CACHE.stockOut.length],
+      ['Total Units IN', full_ti],
+      ['Total Units OUT', full_to],
+      ['Net Stock (IN - OUT)', full_ti - full_to],
+      ['Products with Alerts', full_low],
+      ['Total Stock IN Value (Rs.)', CACHE.stockIn.reduce((a,b)=>a+b.total,0).toLocaleString('en-IN',{minimumFractionDigits:2})],
+      ['Total Stock OUT Value (Rs.)', CACHE.stockOut.reduce((a,b)=>a+b.total,0).toLocaleString('en-IN',{minimumFractionDigits:2})],
+    ];
+    doc.autoTable({
+      startY: y,
+      head: [['Metric','Value']],
+      body: summaryRows,
+      theme: 'grid',
+      headStyles: { fillColor:[30,41,59], textColor:[226,232,240], fontStyle:'bold', fontSize:10 },
+      bodyStyles: { fontSize:10 },
+      alternateRowStyles: { fillColor:[248,248,247] },
+      columnStyles: { 0:{cellWidth:100}, 1:{cellWidth:60, halign:'right', fontStyle:'bold'} },
+      margin: { left:10, right:10 },
+      tableWidth: 165,
+      didDrawPage: (data) => {
+        pdfFooter(doc, data.pageNumber, doc.internal.getNumberOfPages());
+      }
+    });
+    doc.save('StockPOS_SystemReport_' + dateStr.replace(/ /g,'_') + '.pdf');
+    toast('✓ System Report PDF downloaded', 'ok');
+  }
 }
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closePicker(); });
